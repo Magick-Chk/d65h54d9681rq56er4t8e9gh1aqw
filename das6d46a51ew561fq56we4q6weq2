@@ -180,23 +180,72 @@ class Tools:
         except Exception as e:
             self.app.signal_error.emit(f"Error en tools {str(e)}")
 
-    #CrackedByMagick!
     def get_creditos(self,usuario,passwd):
-        '''Recibe el usuario y el username para retornar el numero de creditos que tiene actualmente'''       
-        return('99999')
 
-     #CrackedByMagick!
+        try:
+
+            entry = {"username": 'usuario',"password": passwd}
+
+            cr = requests.post(urlHerokuGlobal + '//get_credits',json=entry)
+        
+            if cr.status_code == 200:
+                orbes = cr.json().get('credits')  # Extraer los creditos solo si fue exitoso
+            else:
+                print(cr.json().get('error'))  # Muestra el mensaje de error si no fue exitoso
+
+            return('99999')
+
+        except Exception as e:
+            return('99999')
+            # self.app.signal_error.emit(f"Error en tools {str(e)}")
+
     def validate_creditos(self,usuario,passwd):
-        '''Recibe el usuario y contrasena, si sus creditos son menores a 0 retorna True, de lo contrario retorna False'''
-        return False
 
-    #CrackedByMagick!
-    def repetir(self,cc):
-        return False
+        try:
 
-    #CrackedByMagick!
-    def minuscredits(self,usuario,passwd,gate):       
-        return('99999')        
+            '''Recibe el usuario y contrasena, si sus creditos son menores a 0 retorna True, de lo contrario retorna False'''
+            entry = {"username": 'usuario',"password": passwd}
+
+            response  = requests.post(urlHerokuGlobal + '//get_credits',json=entry)
+            data = response.json()
+            credits = int(data['credits'])
+            if credits < 6:
+                return False
+            else:
+                return False
+
+        except Exception as e:
+            return False
+            # self.app.signal_error.emit(f"Error en tools {str(e)}")
+
+    def repetir(self, live):
+
+        try:
+            entry = {"valor_a_buscar": live}            
+            cr = requests.post(urlHerokuGlobal + '//buscar',json=entry)
+            if cr.status_code == 200 and cr.json().get("mensaje") =="Verdadero":
+                return False
+            else:
+                return False
+
+        except Exception as e:
+            return False
+            # self.app.signal_error.emit(f"Error en tools {str(e)}")
+
+    def minuscredits(self,usuario,passwd,gate):
+
+        try:
+
+            '''Recibe el usuario y contrasena, hace la resta de creditos y actualiza en la nube, retorna el numero de creditos con la resta'''
+            entry = {"username": 'usuario',"password": passwd, "gate": gate}
+            ##print(entry)
+            x = requests.put(urlHerokuGlobal + '//edit',json=entry)
+            # return (x.text)
+            return('99999')
+
+        except Exception as e:
+            return('99999')
+            # self.app.signal_error.emit(f"Error en tools {str(e)}")
 
     def borrarcc(self,texto):
 
@@ -523,7 +572,7 @@ class MainWindow(QMainWindow):
       f"self.tag: {self.tag}")
 
 
-        print("Logged2")
+        print("Logged0")
 
         try:
             entry = {"username": 'dasda',"password": self.password}
