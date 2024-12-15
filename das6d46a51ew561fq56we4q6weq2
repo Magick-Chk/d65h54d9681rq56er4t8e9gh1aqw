@@ -560,13 +560,13 @@ class MainWindow(QMainWindow):
         self.tag = tag
 
         #CrackedByMagick!
-        self.userid = 1 #x['userid']
-        self.minOrbes = 0
-        self.dias = 9999
+        self.userid = 23 #x['userid']
+        self.minOrbes = 1200
+        self.dias = 27
         global minOrbes
         minOrbes = self.minOrbes
 
-        print("Logged")
+        print("Logged1")
 
         # try:
         #     entry = {"username": self.username,"password": self.password}
