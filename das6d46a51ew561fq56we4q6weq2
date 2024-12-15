@@ -559,28 +559,28 @@ class MainWindow(QMainWindow):
         self.user = user
         self.tag = tag        
 
-        print("Logged0")
+        print("Logged1")
 
-        try:
-            entry = {"username": self.username,"password": self.password}
-            cr = requests.post(urlHerokuGlobal + '//get_userid', json=entry)
+        # try:
+        #     entry = {"username": self.username,"password": self.password}
+        #     cr = requests.post(urlHerokuGlobal + '//get_userid', json=entry)
 
-            print(cr.content)
+        #     print(cr.content)
 
-            if cr.status_code == 200:
-                self.userid = cr.json().get('user_id')  # Extraer el user_id solo si fue exitoso
-                self.minOrbes = cr.json().get('minOrbes') # Extraer el minimo de orbes
-                self.dias = cr.json().get('dias_restantes') # Extraer los dias restantes
-                global minOrbes
-                minOrbes = self.minOrbes
-            else:
-                print(cr.json().get('error'))  # Muestra el mensaje de error si no fue exitoso
+        #     if cr.status_code == 200:
+        #         self.userid = cr.json().get('user_id')  # Extraer el user_id solo si fue exitoso
+        #         self.minOrbes = cr.json().get('minOrbes') # Extraer el minimo de orbes
+        #         self.dias = cr.json().get('dias_restantes') # Extraer los dias restantes
+        #         global minOrbes
+        #         minOrbes = self.minOrbes
+        # print(self.userid, self.minOrbes, self.dias)
+        #     else:
+        #         print(cr.json().get('error'))  # Muestra el mensaje de error si no fue exitoso
 
-        except Exception as e:
-            self.app.signal_error.emit(f"Error en tools {str(e)}")
+        # except Exception as e:
+        #     self.app.signal_error.emit(f"Error en tools {str(e)}")
 
-
-        print(self.userid, self.minOrbes, self.dias)
+       
 
 
         #CrackedByMagick!
