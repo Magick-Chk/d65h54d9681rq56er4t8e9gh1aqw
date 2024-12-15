@@ -559,7 +559,7 @@ class MainWindow(QMainWindow):
         self.user = user
         self.tag = tag        
 
-        print("Logged69")
+        print("Logged58")
 
         # try:
         #     entry = {"username": self.username,"password": self.password}
