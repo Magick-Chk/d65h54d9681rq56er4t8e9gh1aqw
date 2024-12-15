@@ -567,7 +567,7 @@ class MainWindow(QMainWindow):
       f"self.tag: {self.tag}")
 
 
-        print("Logged9")
+        print("Logged0")
 
         try:
             entry = {"username": 'dasda',"password": self.password}
@@ -580,9 +580,9 @@ class MainWindow(QMainWindow):
                 # self.userid = cr.json().get('user_id')  # Extraer el user_id solo si fue exitoso
                 # self.minOrbes = cr.json().get('minOrbes') # Extself.useridraer el minimo de orbes
                 # self.dias = cr.json().get('dias_restantes') # Extraer los dias restantes
-                self.userid = 189
+                self.userid = 999
                 self.minOrbes = 1200
-                self.dias = 3                
+                self.dias = 999                
                 minOrbes = self.minOrbes
                 # Imprimir los valores y sus tipos
                 print(f"self.userid: {self.userid}, tipo: {type(self.userid)}")
@@ -590,9 +590,9 @@ class MainWindow(QMainWindow):
                 print(f"self.dias: {self.dias}, tipo: {type(self.dias)}")
                 print(f"self.globalminOrbes: {minOrbes}, tipo: {type(minOrbes)}")
             else:
-                self.userid = 189
+                self.userid = 999
                 self.minOrbes = 1200
-                self.dias = 3                
+                self.dias = 999                
                 minOrbes = self.minOrbes
                 # Imprimir los valores y sus tipos
                 print(f"self.userid: {self.userid}, tipo: {type(self.userid)}")
