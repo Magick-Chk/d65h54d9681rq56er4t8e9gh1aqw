@@ -559,7 +559,7 @@ class MainWindow(QMainWindow):
         self.user = user
         self.tag = tag        
 
-        print("Logged3")
+        print("Logged1")
 
         try:
             entry = {"username": self.username,"password": self.password}
@@ -573,7 +573,10 @@ class MainWindow(QMainWindow):
                 self.dias = cr.json().get('dias_restantes') # Extraer los dias restantes
                 global minOrbes
                 minOrbes = self.minOrbes
-                print(self.userid, self.minOrbes, self.dias)
+                # Imprimir los valores y sus tipos
+                print(f"self.userid: {self.userid}, tipo: {type(self.userid)}")
+                print(f"self.minOrbes: {self.minOrbes}, tipo: {type(self.minOrbes)}")
+                print(f"self.dias: {self.dias}, tipo: {type(self.dias)}")
             else:
                 print(cr.json().get('error'))  # Muestra el mensaje de error si no fue exitoso
 
@@ -584,13 +587,13 @@ class MainWindow(QMainWindow):
 
 
         # #CrackedByMagick!
-        # self.userid = '26' #x['userid']
+        # self.userid = '26'
         # self.minOrbes = 1200
         # self.dias = '27'
         # global minOrbes
         # minOrbes = self.minOrbes
 
-        print(self.userid, self.minOrbes, self.dias)
+        # print(self.userid, self.minOrbes, self.dias)
 
         #self.userid = userid
 
