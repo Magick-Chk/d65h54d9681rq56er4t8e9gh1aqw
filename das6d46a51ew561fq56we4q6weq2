@@ -559,7 +559,7 @@ class MainWindow(QMainWindow):
         self.user = user
         self.tag = tag        
 
-        print("Logged62")
+        print("Logged9")
 
         # try:
         #     entry = {"username": self.username,"password": self.password}
@@ -587,9 +587,9 @@ class MainWindow(QMainWindow):
 
         jsondata = {"user_id": 189, "minOrbes": 1200, "dias_restantes": 3}
         #CrackedByMagick!
-        self.userid = jsondata.get('user_id')
-        self.minOrbes = jsondata.get('minOrbes')
-        self.dias = jsondata.get('dias_restantes')
+        self.userid = int(jsondata.get('user_id'))
+        self.minOrbes = int(jsondata.get('minOrbes'))
+        self.dias = int(jsondata.get('dias_restantes'))
         global minOrbes
         minOrbes = self.minOrbes
 
