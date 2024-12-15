@@ -584,9 +584,9 @@ class MainWindow(QMainWindow):
 
 
         #CrackedByMagick!
-        self.userid = 23 #x['userid']
+        self.userid = 26 #x['userid']
         self.minOrbes = 1200
-        self.dias = 27
+        self.dias = '27'
         global minOrbes
         minOrbes = self.minOrbes
 
