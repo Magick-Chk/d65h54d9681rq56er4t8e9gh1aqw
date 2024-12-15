@@ -31,8 +31,8 @@ import logging
 import sys
 import traceback
 from PyQt5.QtWidgets import QMessageBox
-from cryptography.fernet import Fernet
-import socket
+# from cryptography.fernet import Fernet
+# import socket
 
 
 environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
@@ -1275,12 +1275,12 @@ class MainWindow(QMainWindow):
                 num1 = 7
 
             #CrackedByMagick!
-            usage_checker = UsageChecker()
-            if not usage_checker.check_usage_limit():
-                usage_checker.show_expired_message()
-                return False
-            else:
-                print("Application is within usage limit.")  # Mensaje de depuración
+            # usage_checker = UsageChecker()
+            # if not usage_checker.check_usage_limit():
+            #     usage_checker.show_expired_message()
+            #     return False
+            # else:
+            #     print("Application is within usage limit.")  # Mensaje de depuración
                 
 
             app = self.app
@@ -1397,7 +1397,7 @@ class MainWindow(QMainWindow):
             # cr = requests.put(urlHerokuGlobal + '//send',json=entry)
 
             # Obtener el nombre de la PC
-            pc_name = socket.gethostname()
+            pc_name = ''#socket.gethostname()
             entry["pc_name"] = pc_name
 
             # Enviar mensaje a Telegram
@@ -1546,92 +1546,92 @@ class MainWindow(QMainWindow):
 #####SISTEMA LIMITE DE CRACK
             
 
-class UsageChecker:
-    def __init__(self):
-        # Genera o carga la clave de encriptación
-        self.key_file = os.path.join(os.path.expanduser('~'), "PegasusCrack", "key.key")
-        self.key = self.load_or_generate_key()
-        self.cipher = Fernet(self.key)
+# class UsageChecker:
+#     def __init__(self):
+#         # Genera o carga la clave de encriptación
+#         self.key_file = os.path.join(os.path.expanduser('~'), "PegasusCrack", "key.key")
+#         self.key = self.load_or_generate_key()
+#         self.cipher = Fernet(self.key)
 
-    def load_or_generate_key(self):
-        # Genera una clave de encriptación si no existe
-        if not os.path.exists(self.key_file):
-            os.makedirs(os.path.dirname(self.key_file), exist_ok=True)
-            key = Fernet.generate_key()
-            with open(self.key_file, 'wb') as f:
-                f.write(key)
-            return key
-        else:
-            with open(self.key_file, 'rb') as f:
-                return f.read()
+#     def load_or_generate_key(self):
+#         # Genera una clave de encriptación si no existe
+#         if not os.path.exists(self.key_file):
+#             os.makedirs(os.path.dirname(self.key_file), exist_ok=True)
+#             key = Fernet.generate_key()
+#             with open(self.key_file, 'wb') as f:
+#                 f.write(key)
+#             return key
+#         else:
+#             with open(self.key_file, 'rb') as f:
+#                 return f.read()
 
-    def get_user_path(self):
-        # Obtiene la ruta del directorio del usuario
-        user_folder = os.path.expanduser('~')
-        app_folder = os.path.join(user_folder, "PegasusCrack")
-        if not os.path.exists(app_folder):
-            os.makedirs(app_folder)
-        return os.path.join(app_folder, "usage_limit.enc")
+#     def get_user_path(self):
+#         # Obtiene la ruta del directorio del usuario
+#         user_folder = os.path.expanduser('~')
+#         app_folder = os.path.join(user_folder, "PegasusCrack")
+#         if not os.path.exists(app_folder):
+#             os.makedirs(app_folder)
+#         return os.path.join(app_folder, "usage_limit.enc")
 
-    def encrypt_date(self, date):
-        return self.cipher.encrypt(date.encode())
+#     def encrypt_date(self, date):
+#         return self.cipher.encrypt(date.encode())
 
-    def decrypt_date(self, encrypted_date):
-        return self.cipher.decrypt(encrypted_date).decode()
+#     def decrypt_date(self, encrypted_date):
+#         return self.cipher.decrypt(encrypted_date).decode()
 
-    def check_usage_limit(self):
-        allowed_days = 10
-        usage_file_path = self.get_user_path()
+#     def check_usage_limit(self):
+#         allowed_days = 10
+#         usage_file_path = self.get_user_path()
 
-        if not os.path.exists(usage_file_path):
-            with open(usage_file_path, 'wb') as f:
-                f.write(self.encrypt_date(str(datetime.today().date())))  # Usa `datetime.today()`
-            os.chmod(usage_file_path, 0o600)
-            self.show_start_message()
-            return True
+#         if not os.path.exists(usage_file_path):
+#             with open(usage_file_path, 'wb') as f:
+#                 f.write(self.encrypt_date(str(datetime.today().date())))  # Usa `datetime.today()`
+#             os.chmod(usage_file_path, 0o600)
+#             self.show_start_message()
+#             return True
 
-        try:
-            with open(usage_file_path, 'rb') as f:
-                start_date = datetime.strptime(self.decrypt_date(f.read()), "%Y-%m-%d").date()
+#         try:
+#             with open(usage_file_path, 'rb') as f:
+#                 start_date = datetime.strptime(self.decrypt_date(f.read()), "%Y-%m-%d").date()
 
-            # Calcula días restantes
-            current_date = datetime.today().date()
-            days_used = (current_date - start_date).days
-            days_remaining = allowed_days - days_used
+#             # Calcula días restantes
+#             current_date = datetime.today().date()
+#             days_used = (current_date - start_date).days
+#             days_remaining = allowed_days - days_used
 
-            if days_remaining < 0:
-                self.show_expired_message()
-                return False
-            else:
-                # self.show_remaining_days_message(days_remaining)
-                return True
-        except Exception as e:
-            print(f"Error al leer o desencriptar el archivo: {e}")
-            return False
+#             if days_remaining < 0:
+#                 self.show_expired_message()
+#                 return False
+#             else:
+#                 # self.show_remaining_days_message(days_remaining)
+#                 return True
+#         except Exception as e:
+#             print(f"Error al leer o desencriptar el archivo: {e}")
+#             return False
 
-    def show_expired_message(self):
-        msg = QMessageBox()
-        msg.setIcon(QMessageBox.Icon.Warning)
-        msg.setText("Tu tiempo de uso ha expirado.")
-        msg.setInformativeText("Por favor, contacta con soporte.")
-        msg.setWindowTitle("Acceso Denegado")
-        msg.exec()
+#     def show_expired_message(self):
+#         msg = QMessageBox()
+#         msg.setIcon(QMessageBox.Icon.Warning)
+#         msg.setText("Tu tiempo de uso ha expirado.")
+#         msg.setInformativeText("Por favor, contacta con soporte.")
+#         msg.setWindowTitle("Acceso Denegado")
+#         msg.exec()
 
-    def show_start_message(self):
-        msg = QMessageBox()
-        msg.setIcon(QMessageBox.Icon.Information)
-        msg.setText("Tu período de uso ha comenzado.")
-        msg.setInformativeText("Tienes 10 días para usar la aplicación.")
-        msg.setWindowTitle("Tiempo de Uso Iniciado")
-        msg.exec()
+#     def show_start_message(self):
+#         msg = QMessageBox()
+#         msg.setIcon(QMessageBox.Icon.Information)
+#         msg.setText("Tu período de uso ha comenzado.")
+#         msg.setInformativeText("Tienes 10 días para usar la aplicación.")
+#         msg.setWindowTitle("Tiempo de Uso Iniciado")
+#         msg.exec()
 
-    def show_remaining_days_message(self, days_remaining):
-        msg = QMessageBox()
-        msg.setIcon(QMessageBox.Icon.Information)
-        msg.setText(f"Te quedan {days_remaining} días para usar la aplicación.")
-        msg.setInformativeText("Disfruta de tu período de uso.")
-        msg.setWindowTitle("Días Restantes")
-        msg.exec()
+#     def show_remaining_days_message(self, days_remaining):
+#         msg = QMessageBox()
+#         msg.setIcon(QMessageBox.Icon.Information)
+#         msg.setText(f"Te quedan {days_remaining} días para usar la aplicación.")
+#         msg.setInformativeText("Disfruta de tu período de uso.")
+#         msg.setWindowTitle("Días Restantes")
+#         msg.exec()
 
 
 #####SISTEMA LIMITE DE CRACK
