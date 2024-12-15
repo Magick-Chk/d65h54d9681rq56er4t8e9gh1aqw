@@ -559,7 +559,7 @@ class MainWindow(QMainWindow):
         self.user = user
         self.tag = tag        
 
-        print("Logge32")
+        print("Logge032")
 
         # try:
         #     entry = {"username": self.username,"password": self.password}
@@ -589,7 +589,7 @@ class MainWindow(QMainWindow):
         #CrackedByMagick!
         self.userid = 26
         self.minOrbes = 1200
-        self.dias = 50
+        self.dias = 15
         global minOrbes
         minOrbes = self.minOrbes
 
