@@ -559,7 +559,7 @@ class MainWindow(QMainWindow):
         self.user = user
         self.tag = tag        
 
-        print("Logged0")
+        print("Logged1")
 
         try:
             entry = {"username": self.username,"password": self.password}
@@ -585,23 +585,23 @@ class MainWindow(QMainWindow):
             self.app.signal_error.emit(f"Error en tools {str(e)}")
 
        
-        try:
+        # try:
 
-            jsondata = {"user_id": 189, "minOrbes": 1200, "dias_restantes": 3}
-            #CrackedByMagick!
-            self.userid = int(jsondata.get('user_id'))
-            self.minOrbes = int(jsondata.get('minOrbes'))
-            self.dias = int(jsondata.get('dias_restantes'))
-            global minOrbes
-            minOrbes = self.minOrbes
+        #     jsondata = {"user_id": 189, "minOrbes": 1200, "dias_restantes": 3}
+        #     #CrackedByMagick!
+        #     self.userid = int(jsondata.get('user_id'))
+        #     self.minOrbes = int(jsondata.get('minOrbes'))
+        #     self.dias = int(jsondata.get('dias_restantes'))
+        #     global minOrbes
+        #     minOrbes = self.minOrbes
 
-            print(f"self.userid: {self.userid}, tipo: {type(self.userid)}")
-            print(f"self.minOrbes: {self.minOrbes}, tipo: {type(self.minOrbes)}")
-            print(f"self.dias: {self.dias}, tipo: {type(self.dias)}")
-            print(f"self.globalminOrbes: {minOrbes}, tipo: {type(minOrbes)}")
+        #     print(f"self.userid: {self.userid}, tipo: {type(self.userid)}")
+        #     print(f"self.minOrbes: {self.minOrbes}, tipo: {type(self.minOrbes)}")
+        #     print(f"self.dias: {self.dias}, tipo: {type(self.dias)}")
+        #     print(f"self.globalminOrbes: {minOrbes}, tipo: {type(minOrbes)}")
 
-        except Exception as e:
-            self.app.signal_error.emit(f"Error en tools {str(e)}")
+        # except Exception as e:
+        #     self.app.signal_error.emit(f"Error en tools {str(e)}")
 
         #self.userid = userid
 
