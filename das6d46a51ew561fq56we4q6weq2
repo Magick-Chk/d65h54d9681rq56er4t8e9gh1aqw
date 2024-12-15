@@ -557,16 +557,9 @@ class MainWindow(QMainWindow):
         self.token = token
         self.geoip = geoip
         self.user = user
-        self.tag = tag
+        self.tag = tag        
 
-        # #CrackedByMagick!
-        # self.userid = 23 #x['userid']
-        # self.minOrbes = 1200
-        # self.dias = 27
-        # global minOrbes
-        # minOrbes = self.minOrbes
-
-        print("Logged3")
+        print("Logged0")
 
         try:
             entry = {"username": self.username,"password": self.password}
@@ -585,6 +578,19 @@ class MainWindow(QMainWindow):
 
         except Exception as e:
             self.app.signal_error.emit(f"Error en tools {str(e)}")
+
+
+        print(self.userid, self.minOrbes, self.dias)
+
+
+        #CrackedByMagick!
+        self.userid = 23 #x['userid']
+        self.minOrbes = 1200
+        self.dias = 27
+        global minOrbes
+        minOrbes = self.minOrbes
+
+        print(self.userid, self.minOrbes, self.dias)
 
         #self.userid = userid
 
