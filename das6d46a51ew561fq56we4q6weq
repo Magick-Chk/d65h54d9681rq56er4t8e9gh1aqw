@@ -805,7 +805,7 @@ class MainWindow(QMainWindow):
         self.ui.erroneo2.setText(str(msgWelcome))
         credits = self.tools.get_creditos(username, password)
         self.ui.CREDITOSS.setText(str(credits))
-        label_nameuser = self.ui.nameuser
+        label_nameuser = "Magick"
         layout = QVBoxLayout()
         support = self.ui.support
 
