@@ -180,23 +180,56 @@ class Tools:
         except Exception as e:
             self.app.signal_error.emit(f"Error en tools {str(e)}")
 
-    #CrackedByMagick!
     def get_creditos(self,usuario,passwd):
-        '''Recibe el usuario y el username para retornar el numero de creditos que tiene actualmente'''       
-        return('99999')
 
-    #CrackedByMagick!
+        try:
+
+            entry = {"username": usuario,"password": passwd}
+
+            cr = requests.post(urlHerokuGlobal + '//get_credits',json=entry)
+
+            if cr.status_code == 200:
+                orbes = cr.json().get('credits')  # Extraer los creditos solo si fue exitoso
+            else:
+                print(cr.json().get('error'))  # Muestra el mensaje de error si no fue exitoso
+
+            return(orbes)
+
+        except Exception as e:
+            self.app.signal_error.emit(f"Error en tools {str(e)}")
+
     def validate_creditos(self,usuario,passwd):
-        '''Recibe el usuario y contrasena, si sus creditos son menores a 0 retorna True, de lo contrario retorna False'''
-        return False
 
-    #CrackedByMagick!
-    def repetir(self,cc):
-        return False
+        try:
 
-    #CrackedByMagick!
-    def minuscredits(self,usuario,passwd,gate):       
-        return('99999')
+            '''Recibe el usuario y contrasena, si sus creditos son menores a 0 retorna True, de lo contrario retorna False'''
+            entry = {"username": usuario,"password": passwd}
+
+            response  = requests.post(urlHerokuGlobal + '//get_credits',json=entry)
+            data = response.json()
+            credits = int(data['credits'])
+            if credits < 6:
+                return True
+            else:
+                return False
+
+        except Exception as e:
+            self.app.signal_error.emit(f"Error en tools {str(e)}")
+
+    def repetir(self, live):
+
+        try:
+            entry = {"valor_a_buscar": live}            
+            cr = requests.post(urlHerokuGlobal + '//buscar',json=entry)
+            if cr.status_code == 200 and cr.json().get("mensaje") =="Verdadero":
+                return True
+            else:
+                return False
+
+        except Exception as e:
+            self.app.signal_error.emit(f"Error en tools {str(e)}")
+
+    def minuscredits(self,usuario,passwd,gate):
 
         try:
 
@@ -527,26 +560,17 @@ class MainWindow(QMainWindow):
         self.tag = tag
 
         try:
-            
-            #CrackedByMagick!
-            self.userid = 'Cracked By Magick!!' #x['userid']
-            self.minOrbes = 0
-            self.dias = '9999'
-            global minOrbes
-            minOrbes = self.minOrbes
+            entry = {"username": self.username,"password": self.password}
+            cr = requests.post(urlHerokuGlobal + '//get_userid', json=entry)
 
-            # entry = {"username": self.username,"password": self.password}
-            # cr = requests.post(urlHerokuGlobal + '//get_userid', json=entry)
-
-            # if cr.status_code == 200:
-            #     self.userid = cr.json().get('user_id')  # Extraer el user_id solo si fue exitoso
-            #     self.minOrbes = cr.json().get('minOrbes') # Extraer el minimo de orbes
-            #     self.dias = cr.json().get('dias_restantes') # Extraer los dias restantes
-            #     global minOrbes
-            #     minOrbes = self.minOrbes
-            #     print(self.userid, self.minOrbes, self.dias)
-            # else:
-            #     print(cr.json().get('error'))  # Muestra el mensaje de error si no fue exitoso
+            if cr.status_code == 200:
+                self.userid = cr.json().get('user_id')  # Extraer el user_id solo si fue exitoso
+                self.minOrbes = cr.json().get('minOrbes') # Extraer el minimo de orbes
+                self.dias = cr.json().get('dias_restantes') # Extraer los dias restantes
+                global minOrbes
+                minOrbes = self.minOrbes
+            else:
+                print(cr.json().get('error'))  # Muestra el mensaje de error si no fue exitoso
 
 
         except Exception as e:
@@ -576,7 +600,7 @@ class MainWindow(QMainWindow):
         #self.ui.bt_menu.clicked.connect(self.mover_menu)
         self.ui.Start.clicked.connect(self.do_sum)
         self.ui.start_b.clicked.connect(self.go_browser)
-        # self.ui.livesb.clicked.connect(self.get_lives)
+        self.ui.livesb.clicked.connect(self.get_lives)
         self.ui.ccsgen.clicked.connect(self.show_ccs)
         self.search_thread = None
         self.ui.Stop.clicked.connect(self.stop_search)
@@ -593,8 +617,8 @@ class MainWindow(QMainWindow):
         self.ui.back_key_2.clicked.connect(lambda: self.ui.stackedWidget.setCurrentIndex(0))
         self.ui.back_i.clicked.connect(lambda: self.ui.stackedWidget.setCurrentIndex(0))
         self.ui.p_gate_finder.clicked.connect(lambda: self.ui.stackedWidget.setCurrentIndex(3)) # GATE/FINDER 3 
-        # self.ui.livesb.clicked.connect(lambda: self.ui.stackedWidget.setCurrentIndex(2)) # LIVES 2 
-        # self.ui.keys.clicked.connect(lambda: self.ui.stackedWidget.setCurrentIndex(4)) # KEYS 4 
+        self.ui.livesb.clicked.connect(lambda: self.ui.stackedWidget.setCurrentIndex(2)) # LIVES 2 
+        self.ui.keys.clicked.connect(lambda: self.ui.stackedWidget.setCurrentIndex(4)) # KEYS 4 
         self.ui.browser.clicked.connect(lambda: self.ui.stackedWidget.setCurrentIndex(5)) # BRWOSER 5
         self.movie = QMovie("./config/loading.gif")
         self.movie.setScaledSize(QSize(35, 35))  # Define el tamaño deql GIF
@@ -996,34 +1020,29 @@ class MainWindow(QMainWindow):
             self.ui.recheck.hide()
 
     def load_key(self):
-        #CrackedByMagick!
         #print(urlHerokuGlobal)
+        key_search = self.ui.key.text()
+        ##print(key_search, self.username)
+        entry = {
+            "key": key_search,
+            "username": self.username
+        }
 
-        credits = "99999"
-        self.ui.CREDITOSS.setText(str(credits))
-
-        # key_search = self.ui.key.text()
-        # ##print(key_search, self.username)
-        # entry = {
-        #     "key": key_search,
-        #     "username": self.username
-        # }
-
-        # # Haciendo la petición POST
-        # response = requests.post(urlHerokuGlobal + '/add-credits', json=entry)
+        # Haciendo la petición POST
+        response = requests.post(urlHerokuGlobal + '/add-credits', json=entry)
 
 
-        # # Convertir la respuesta en JSON a un diccionario de Python
-        # data = response.json()
+        # Convertir la respuesta en JSON a un diccionario de Python
+        data = response.json()
 
-        # # Extraer y imprimir el mensaje de la respuesta
-        # message = data.get("message", "No message found")
-        # ##print(message)
-        # self.ui.label.setText(message)
+        # Extraer y imprimir el mensaje de la respuesta
+        message = data.get("message", "No message found")
+        ##print(message)
+        self.ui.label.setText(message)
 
-        # if response.status_code == 200:
-        #     credits = self.tools.get_creditos(self.username, self.password)
-        #     self.ui.CREDITOSS.setText(str(credits))
+        if response.status_code == 200:
+            credits = self.tools.get_creditos(self.username, self.password)
+            self.ui.CREDITOSS.setText(str(credits))
 
     def find_gates(self):
         bin_search = self.ui.ccfind.text()
