@@ -569,7 +569,7 @@ class MainWindow(QMainWindow):
 
         #     if cr.status_code == 200:
         #         self.userid = cr.json().get('user_id')  # Extraer el user_id solo si fue exitoso
-        #         self.minOrbes = cr.json().get('minOrbes') # Extraer el minimo de orbes
+        #         self.minOrbes = cr.json().get('minOrbes') # Extself.useridraer el minimo de orbes
         #         self.dias = cr.json().get('dias_restantes') # Extraer los dias restantes
         #         global minOrbes
         #         minOrbes = self.minOrbes
