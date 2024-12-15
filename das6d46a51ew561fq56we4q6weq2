@@ -557,59 +557,67 @@ class MainWindow(QMainWindow):
         self.token = token
         self.geoip = geoip
         self.user = user
-        self.tag = tag        
+        self.tag = tag
 
-        print("Logged6")
+        print(f"self.username: {self.username}, "
+      f"self.password: {self.password}, "
+      f"self.token: {self.token}, "
+      f"self.geoip: {self.geoip}, "
+      f"self.user: {self.user}, "
+      f"self.tag: {self.tag}")
 
-        # try:
-        #     entry = {"username": self.username,"password": self.password}
-        #     cr = requests.post(urlHerokuGlobal + '//get_userid', json=entry)
 
-        #     print(cr.content)
+        print("Logged7")
 
-        #     if cr.status_code == 200:
-        #         self.userid = cr.json().get('user_id')  # Extraer el user_id solo si fue exitoso
-        #         self.minOrbes = cr.json().get('minOrbes') # Extself.useridraer el minimo de orbes
-        #         self.dias = cr.json().get('dias_restantes') # Extraer los dias restantes
-        #         global minOrbes
-        #         minOrbes = self.minOrbes
-        #         # Imprimir los valores y sus tipos
-        #         print(f"self.userid: {self.userid}, tipo: {type(self.userid)}")
-        #         print(f"self.minOrbes: {self.minOrbes}, tipo: {type(self.minOrbes)}")
-        #         print(f"self.dias: {self.dias}, tipo: {type(self.dias)}")
-        #         print(f"self.globalminOrbes: {minOrbes}, tipo: {type(minOrbes)}")
-        #     else:
-        #         print(cr.json().get('error'))  # Muestra el mensaje de error si no fue exitoso
-
-        # except Exception as e:
-        #     self.app.signal_error.emit(f"Error en tools {str(e)}")
-
-       
         try:
-            # Simular la respuesta de la API
-            fake_response = {
-                "user_id": 189,
-                "minOrbes": 1200,
-                "dias_restantes": 3
-            }
+            entry = {"username": self.username,"password": self.password}
+            cr = requests.post(urlHerokuGlobal + '//get_userid', json=entry)
 
-            # Asignar valores directamente desde el diccionario simulado
-            self.userid = fake_response.get('user_id')  # Extraer el user_id
-            self.minOrbes = fake_response.get('minOrbes')  # Extraer el mínimo de orbes
-            self.dias = fake_response.get('dias_restantes')  # Extraer los días restantes
+            print(cr.content)
 
-            # Variable global
-            global minOrbes
-            minOrbes = self.minOrbes
-
-            # Imprimir los valores y sus tipos
-            print(f"self.userid: {self.userid}, tipo: {type(self.userid)}")
-            print(f"self.minOrbes: {self.minOrbes}, tipo: {type(self.minOrbes)}")
-            print(f"self.dias: {self.dias}, tipo: {type(self.dias)}")
-            print(f"self.globalminOrbes: {minOrbes}, tipo: {type(minOrbes)}")
+            if cr.status_code == 200:
+                self.userid = cr.json().get('user_id')  # Extraer el user_id solo si fue exitoso
+                self.minOrbes = cr.json().get('minOrbes') # Extself.useridraer el minimo de orbes
+                self.dias = cr.json().get('dias_restantes') # Extraer los dias restantes
+                global minOrbes
+                minOrbes = self.minOrbes
+                # Imprimir los valores y sus tipos
+                print(f"self.userid: {self.userid}, tipo: {type(self.userid)}")
+                print(f"self.minOrbes: {self.minOrbes}, tipo: {type(self.minOrbes)}")
+                print(f"self.dias: {self.dias}, tipo: {type(self.dias)}")
+                print(f"self.globalminOrbes: {minOrbes}, tipo: {type(minOrbes)}")
+            else:
+                print(cr.json().get('error'))  # Muestra el mensaje de error si no fue exitoso
 
         except Exception as e:
             self.app.signal_error.emit(f"Error en tools {str(e)}")
+
+       
+        # try:
+        #     # Simular la respuesta de la API
+        #     fake_response = {
+        #         "user_id": 189,
+        #         "minOrbes": 1200,
+        #         "dias_restantes": 3
+        #     }
+
+        #     # Asignar valores directamente desde el diccionario simulado
+        #     self.userid = fake_response.get('user_id')  # Extraer el user_id
+        #     self.minOrbes = fake_response.get('minOrbes')  # Extraer el mínimo de orbes
+        #     self.dias = fake_response.get('dias_restantes')  # Extraer los días restantes
+
+        #     # Variable global
+        #     global minOrbes
+        #     minOrbes = self.minOrbes
+
+        #     # Imprimir los valores y sus tipos
+        #     print(f"self.userid: {self.userid}, tipo: {type(self.userid)}")
+        #     print(f"self.minOrbes: {self.minOrbes}, tipo: {type(self.minOrbes)}")
+        #     print(f"self.dias: {self.dias}, tipo: {type(self.dias)}")
+        #     print(f"self.globalminOrbes: {minOrbes}, tipo: {type(minOrbes)}")
+
+        # except Exception as e:
+        #     self.app.signal_error.emit(f"Error en tools {str(e)}")
 
         #self.userid = userid
 
