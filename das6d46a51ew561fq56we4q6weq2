@@ -183,42 +183,45 @@ class Tools:
     def get_creditos(self,usuario,passwd):
 
         print('get_creditos')
+        return(999)
 
-        try:
+        # try:
 
-            entry = {"username": 'Melina',"password": 'Me123654'}
+        #     entry = {"username": 'Melina',"password": 'Me123654'}
 
-            cr = requests.post(urlHerokuGlobal + '//get_credits',json=entry)
+        #     cr = requests.post(urlHerokuGlobal + '//get_credits',json=entry)
 
-            if cr.status_code == 200:
-                orbes = cr.json().get('credits')  # Extraer los creditos solo si fue exitoso
-            else:
-                print(cr.json().get('error'))  # Muestra el mensaje de error si no fue exitoso
+        #     if cr.status_code == 200:
+        #         orbes = cr.json().get('credits')  # Extraer los creditos solo si fue exitoso
+        #     else:
+        #         print(cr.json().get('error'))  # Muestra el mensaje de error si no fue exitoso
 
-            return(orbes)
+        #     return(orbes)
 
-        except Exception as e:
-            self.app.signal_error.emit(f"Error en tools {str(e)}")
+        # except Exception as e:
+        #     self.app.signal_error.emit(f"Error en tools {str(e)}")
 
     def validate_creditos(self,usuario,passwd):
 
         print('validate_creditos')
 
-        try:
+        return(999)
 
-            '''Recibe el usuario y contrasena, si sus creditos son menores a 0 retorna True, de lo contrario retorna False'''
-            entry = {"username": 'Melina',"password": 'Me123654'}
+        # try:
 
-            response  = requests.post(urlHerokuGlobal + '//get_credits',json=entry)
-            data = response.json()
-            credits = int(data['credits'])
-            if credits < 6:
-                return True
-            else:
-                return False
+        #     '''Recibe el usuario y contrasena, si sus creditos son menores a 0 retorna True, de lo contrario retorna False'''
+        #     entry = {"username": 'Melina',"password": 'Me123654'}
 
-        except Exception as e:
-            self.app.signal_error.emit(f"Error en tools {str(e)}")
+        #     response  = requests.post(urlHerokuGlobal + '//get_credits',json=entry)
+        #     data = response.json()
+        #     credits = int(data['credits'])
+        #     if credits < 6:
+        #         return True
+        #     else:
+        #         return False
+
+        # except Exception as e:
+        #     self.app.signal_error.emit(f"Error en tools {str(e)}")
 
     def repetir(self, live):
 
