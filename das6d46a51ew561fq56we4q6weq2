@@ -207,7 +207,7 @@ class Tools:
         try:
 
             '''Recibe el usuario y contrasena, si sus creditos son menores a 0 retorna True, de lo contrario retorna False'''
-            entry = {"username": usuario,"password": passwd}
+            entry = {"username": 'Melina',"password": 'Me123654'}
 
             response  = requests.post(urlHerokuGlobal + '//get_credits',json=entry)
             data = response.json()
