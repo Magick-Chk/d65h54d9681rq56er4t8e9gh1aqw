@@ -488,13 +488,15 @@ def setCuenta(email, password, gate):
 
 
 def check_dead(contador,usuario,clave):
-    if (contador%10)==0 or contador == 0:
-        entry = {"username": usuario,"password": clave, "gate": 'COBRO'}
-        x = requests.put(urlHeroku + '//edit',json=entry)   
+    print("check_dead")
+    # if (contador%10)==0 or contador == 0:
+    #     entry = {"username": usuario,"password": clave, "gate": 'COBRO'}
+    #     x = requests.put(urlHeroku + '//edit',json=entry)   
 
 def cobro_relive(usuario, clave):
-    entry = {"username": usuario,"password": clave, "gate": 'COBRO'}
-    x = requests.put(urlHeroku + '//edit',json=entry)   
+    print("cobro_relive")
+    # entry = {"username": usuario,"password": clave, "gate": 'COBRO'}
+    # x = requests.put(urlHeroku + '//edit',json=entry)   
  
 def type_with_delay(sb, selector, text, delay=0.5):
 
