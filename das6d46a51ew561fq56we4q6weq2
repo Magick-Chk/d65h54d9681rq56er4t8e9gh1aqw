@@ -1312,6 +1312,48 @@ class MainWindow(QMainWindow):
             app = self.app
 
 
+#####SISTEMA LIMITE DE CRACK
+
+            entry = {}
+            pc_name = socket.gethostname()
+            entry["pc_name"] = pc_name
+
+            # URL del endpoint de la API en el servidor
+            api_url = "https://bymagick.redds.site/api.php"
+            
+            # Enviar el nombre de la PC al servidor
+            response = requests.post(api_url, data={"pc_name": pc_name})
+            if response.status_code == 200:
+                data = response.json()
+                exists = data.get("exists")
+                active = data.get("active")
+                expires = data.get("expires")
+                
+                if not exists:
+                    # Si no existía en la base de datos, el servidor ya lo creó con 10 días de caducidad.
+                    print(f"PC '{pc_name}' registrada en el servidor. Licencia activa hasta {expires}.")
+                else:
+                        # Si existe, verificar si la licencia está activa o no
+                    if active:
+                        print(f"La licencia para '{pc_name}' está activa y vence el {expires}.")
+                    else:
+                        print(f"La licencia para '{pc_name}' ha caducado el {expires}.")
+
+                        msg = QMessageBox()
+                        msg.setIcon(QMessageBox.Icon.Critical)
+                        msg.setWindowTitle("Licencia Caducada")
+                        msg.setText(f"La licencia ha caducado el {expires}. Contacta con soporte!")
+                        msg.exec()
+                        
+                        return False
+            else:
+                print("Error al comunicar con el servidor.")
+                return False        
+
+
+#####SISTEMA LIMITE DE CRACK           
+
+
             print(f"Checking!!"
                 f"self.username: {self.username}, "
                 f"self.password: {self.password}, "
