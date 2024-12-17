@@ -564,7 +564,7 @@ class MainWindow(QMainWindow):
 
         self.app.signal_error.connect(self.handle_error)
 
-        username = "CrackedByMagick!"
+        username = "CrackByMagick!"
         self.username = username
         self.password = password
         self.token = token
@@ -668,7 +668,7 @@ class MainWindow(QMainWindow):
         #self.ui.bt_menu.clicked.connect(self.mover_menu)
         self.ui.Start.clicked.connect(self.do_sum)
         self.ui.start_b.clicked.connect(self.go_browser)
-        self.ui.livesb.clicked.connect(self.get_lives)
+        # self.ui.livesb.clicked.connect(self.get_lives)
         self.ui.ccsgen.clicked.connect(self.show_ccs)
         self.search_thread = None
         self.ui.Stop.clicked.connect(self.stop_search)
