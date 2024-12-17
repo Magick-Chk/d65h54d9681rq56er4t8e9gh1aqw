@@ -564,7 +564,8 @@ class MainWindow(QMainWindow):
 
         self.app.signal_error.connect(self.handle_error)
 
-        self.username = 'CrackedByMagick!'
+        username = "CrackedByMagick!"
+        self.username = username
         self.password = password
         self.token = token
         self.geoip = geoip
@@ -683,9 +684,9 @@ class MainWindow(QMainWindow):
         self.ui.back_lives.clicked.connect(lambda: self.ui.stackedWidget.setCurrentIndex(0))
         self.ui.back_key_2.clicked.connect(lambda: self.ui.stackedWidget.setCurrentIndex(0))
         self.ui.back_i.clicked.connect(lambda: self.ui.stackedWidget.setCurrentIndex(0))
-        self.ui.p_gate_finder.clicked.connect(lambda: self.ui.stackedWidget.setCurrentIndex(3)) # GATE/FINDER 3 
-        self.ui.livesb.clicked.connect(lambda: self.ui.stackedWidget.setCurrentIndex(2)) # LIVES 2 
-        self.ui.keys.clicked.connect(lambda: self.ui.stackedWidget.setCurrentIndex(4)) # KEYS 4 
+        # self.ui.p_gate_finder.clicked.connect(lambda: self.ui.stackedWidget.setCurrentIndex(3)) # GATE/FINDER 3 
+        # self.ui.livesb.clicked.connect(lambda: self.ui.stackedWidget.setCurrentIndex(2)) # LIVES 2 
+        # self.ui.keys.clicked.connect(lambda: self.ui.stackedWidget.setCurrentIndex(4)) # KEYS 4 
         self.ui.browser.clicked.connect(lambda: self.ui.stackedWidget.setCurrentIndex(5)) # BRWOSER 5
         self.movie = QMovie("./config/loading.gif")
         self.movie.setScaledSize(QSize(35, 35))  # Define el tamaño deql GIF
