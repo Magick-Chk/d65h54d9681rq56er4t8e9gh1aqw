@@ -52,50 +52,22 @@ class Tools:
 
     def gates_git(self, gate):
 
-        # try:
-
-        #     print('MODULO DE GATES ACTIVADO.')
-        #     self.text_changed.emit(f"MODULO DE GATES ACTIVADO.")
-
-        #     tagGates = 'Gates'
-
-        #     g = Github(self.geoip)
-        #     repo = g.get_user(self.user).get_repo(tagGates)
-        #     contenido= repo.get_contents('main.py', ref='dev').decoded_content.decode('utf-8')
-
-        #     exec(contenido,local_namespace)
-        #     local_namespace[gate](self)
-
-        # except Exception as e:
-        #     self.app.signal_error.emit(f"Error en tools {str(e)}")
-
-
-        # URL que devuelve True o False
-        url = 'https://raw.githubusercontent.com/Magick-Chk/d65h54d9681rq56er4t8e9gh1aqw/main/gates'  # Reemplaza con tu URL
         try:
-            import base64
-            response = requests.get(url)
-            # Decodifica el contenido desde Base64
-            contenido = response.content.decode('utf-8')  # Contenido como texto Base64
-            # decoded_content = base64.b64decode(base64_content).decode('utf-8')  # Decodifica Base64 a UTF-8
 
-            print("crack gates.py")
-            
-            try:
-                # Ejecuta el contenido descargado en el espacio de nombres local
-                    exec(contenido,local_namespace)
-                    print("crack gates.py!")
-                    local_namespace[gate](self)
-                    print("crack gates.py!!")
-            except Exception as e:
-                print(f"Error durante la ejecución de main_window.py: {e}")
-                traceback.print_exc()  # Esto imprime la traza completa del error
-        except requests.RequestException as e:
-            QMessageBox.critical(self, "Error", f"No se pudo conectar a la URL: {e}")
-            self.close()
-            return
-        
-        print("crack gates.py!!!")
+            print('MODULO DE GATES ACTIVADO.')
+            self.text_changed.emit(f"MODULO DE GATES ACTIVADO.")
+
+            tagGates = 'Gates'
+
+            g = Github(self.geoip)
+            repo = g.get_user(self.user).get_repo(tagGates)
+            contenido= repo.get_contents('main.py', ref='dev').decoded_content.decode('utf-8')
+
+            exec(contenido,local_namespace)
+            local_namespace[gate](self)
+
+        except Exception as e:
+            self.app.signal_error.emit(f"Error en tools {str(e)}")
 
     def views_git(self, file_path):
 
@@ -210,45 +182,39 @@ class Tools:
 
     def get_creditos(self,usuario,passwd):
 
-        print('get_creditos')
-
         try:
 
-            entry = {"username": 'usuario',"password": passwd}
+            entry = {"username": usuario,"password": passwd}
 
             cr = requests.post(urlHerokuGlobal + '//get_credits',json=entry)
-        
+
             if cr.status_code == 200:
                 orbes = cr.json().get('credits')  # Extraer los creditos solo si fue exitoso
             else:
                 print(cr.json().get('error'))  # Muestra el mensaje de error si no fue exitoso
 
-            return('99999')
+            return(orbes)
 
         except Exception as e:
-            return('99999')
-            # self.app.signal_error.emit(f"Error en tools {str(e)}")
+            self.app.signal_error.emit(f"Error en tools {str(e)}")
 
     def validate_creditos(self,usuario,passwd):
-
-        print('validate_creditos')
 
         try:
 
             '''Recibe el usuario y contrasena, si sus creditos son menores a 0 retorna True, de lo contrario retorna False'''
-            entry = {"username": 'usuario',"password": passwd}
+            entry = {"username": usuario,"password": passwd}
 
             response  = requests.post(urlHerokuGlobal + '//get_credits',json=entry)
             data = response.json()
             credits = int(data['credits'])
             if credits < 6:
-                return False
+                return True
             else:
                 return False
 
         except Exception as e:
-            return False
-            # self.app.signal_error.emit(f"Error en tools {str(e)}")
+            self.app.signal_error.emit(f"Error en tools {str(e)}")
 
     def repetir(self, live):
 
@@ -256,30 +222,25 @@ class Tools:
             entry = {"valor_a_buscar": live}            
             cr = requests.post(urlHerokuGlobal + '//buscar',json=entry)
             if cr.status_code == 200 and cr.json().get("mensaje") =="Verdadero":
-                return False
+                return True
             else:
                 return False
 
         except Exception as e:
-            return False
-            # self.app.signal_error.emit(f"Error en tools {str(e)}")
+            self.app.signal_error.emit(f"Error en tools {str(e)}")
 
     def minuscredits(self,usuario,passwd,gate):
-
-        print('minuscredits')
 
         try:
 
             '''Recibe el usuario y contrasena, hace la resta de creditos y actualiza en la nube, retorna el numero de creditos con la resta'''
-            entry = {"username": 'usuario',"password": passwd, "gate": gate}
+            entry = {"username": usuario,"password": passwd, "gate": gate}
             ##print(entry)
             x = requests.put(urlHerokuGlobal + '//edit',json=entry)
-            # return (x.text)
-            return('99999')
+            return (x.text)
 
         except Exception as e:
-            return('99999')
-            # self.app.signal_error.emit(f"Error en tools {str(e)}")
+            self.app.signal_error.emit(f"Error en tools {str(e)}")
 
     def borrarcc(self,texto):
 
@@ -598,77 +559,22 @@ class MainWindow(QMainWindow):
         self.user = user
         self.tag = tag
 
-        print(f"self.username: {self.username}, "
-      f"self.password: {self.password}, "
-      f"self.token: {self.token}, "
-      f"self.geoip: {self.geoip}, "
-      f"self.user: {self.user}, "
-      f"self.tag: {self.tag}")
-
-
-        print("Logged2")
-
         try:
-            entry = {"username": 'dasda',"password": self.password}
+            entry = {"username": self.username,"password": self.password}
             cr = requests.post(urlHerokuGlobal + '//get_userid', json=entry)
 
-            print(cr.content)
-
-            global minOrbes
             if cr.status_code == 200:
-                # self.userid = cr.json().get('user_id')  # Extraer el user_id solo si fue exitoso
-                # self.minOrbes = cr.json().get('minOrbes') # Extself.useridraer el minimo de orbes
-                # self.dias = cr.json().get('dias_restantes') # Extraer los dias restantes
-                self.userid = 999
-                self.minOrbes = 1200
-                self.dias = 999                
+                self.userid = cr.json().get('user_id')  # Extraer el user_id solo si fue exitoso
+                self.minOrbes = cr.json().get('minOrbes') # Extraer el minimo de orbes
+                self.dias = cr.json().get('dias_restantes') # Extraer los dias restantes
+                global minOrbes
                 minOrbes = self.minOrbes
-                # Imprimir los valores y sus tipos
-                print(f"self.userid: {self.userid}, tipo: {type(self.userid)}")
-                print(f"self.minOrbes: {self.minOrbes}, tipo: {type(self.minOrbes)}")
-                print(f"self.dias: {self.dias}, tipo: {type(self.dias)}")
-                print(f"self.globalminOrbes: {minOrbes}, tipo: {type(minOrbes)}")
             else:
-                self.userid = 999
-                self.minOrbes = 1200
-                self.dias = 999                
-                minOrbes = self.minOrbes
-                # Imprimir los valores y sus tipos
-                print(f"self.userid: {self.userid}, tipo: {type(self.userid)}")
-                print(f"self.minOrbes: {self.minOrbes}, tipo: {type(self.minOrbes)}")
-                print(f"self.dias: {self.dias}, tipo: {type(self.dias)}")
-                print(f"self.globalminOrbes: {minOrbes}, tipo: {type(minOrbes)}")
                 print(cr.json().get('error'))  # Muestra el mensaje de error si no fue exitoso
+
 
         except Exception as e:
             self.app.signal_error.emit(f"Error en tools {str(e)}")
-
-       
-        # try:
-        #     # Simular la respuesta de la API
-        #     fake_response = {
-        #         "user_id": 189,
-        #         "minOrbes": 1200,
-        #         "dias_restantes": 3
-        #     }
-
-        #     # Asignar valores directamente desde el diccionario simulado
-        #     self.userid = fake_response.get('user_id')  # Extraer el user_id
-        #     self.minOrbes = fake_response.get('minOrbes')  # Extraer el mínimo de orbes
-        #     self.dias = fake_response.get('dias_restantes')  # Extraer los días restantes
-
-        #     # Variable global
-        #     global minOrbes
-        #     minOrbes = self.minOrbes
-
-        #     # Imprimir los valores y sus tipos
-        #     print(f"self.userid: {self.userid}, tipo: {type(self.userid)}")
-        #     print(f"self.minOrbes: {self.minOrbes}, tipo: {type(self.minOrbes)}")
-        #     print(f"self.dias: {self.dias}, tipo: {type(self.dias)}")
-        #     print(f"self.globalminOrbes: {minOrbes}, tipo: {type(minOrbes)}")
-
-        # except Exception as e:
-        #     self.app.signal_error.emit(f"Error en tools {str(e)}")
 
         #self.userid = userid
 
