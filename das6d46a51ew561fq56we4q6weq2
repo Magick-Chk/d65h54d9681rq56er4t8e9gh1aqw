@@ -32,6 +32,7 @@ import sys
 import traceback
 from PyQt5.QtWidgets import QMessageBox
 import time
+import socket
 
 
 environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
@@ -90,8 +91,14 @@ class Tools:
             exec(contenido,local_namespace)
             local_namespace[gate](self)
 
+        except SystemExit as e:
+            # Atrapar si el script ejecutado intenta cerrar la app con sys.exit().
+            # Simplemente ignoras o muestras un mensaje.
+            self.app.signal_error.emit(f"Error (SystemExit) en tools: {str(e)}")
+
         except Exception as e:
-            self.app.signal_error.emit(f"Error en tools {str(e)}")
+            # Aquí se atrapan las excepciones normales
+            self.app.signal_error.emit(f"Error en tools: {str(e)}")
 
     def views_git(self, file_path):
 
@@ -204,79 +211,25 @@ class Tools:
         except Exception as e:
             self.app.signal_error.emit(f"Error en tools {str(e)}")
 
+    #CrackedByMagick!
     def get_creditos(self,usuario,passwd):
-
         print('get_creditos')
-        return(999)
+        return(9999)
 
-        # try:
-
-        #     entry = {"username": 'Melina',"password": 'Me123654'}
-
-        #     cr = requests.post(urlHerokuGlobal + '//get_credits',json=entry)
-
-        #     if cr.status_code == 200:
-        #         orbes = cr.json().get('credits')  # Extraer los creditos solo si fue exitoso
-        #     else:
-        #         print(cr.json().get('error'))  # Muestra el mensaje de error si no fue exitoso
-
-        #     return(orbes)
-
-        # except Exception as e:
-        #     self.app.signal_error.emit(f"Error en tools {str(e)}")
-
+    #CrackedByMagick!
     def validate_creditos(self,usuario,passwd):
-
         print('validate_creditos')
 
-        return False
+        return False       
 
-        # try:
-
-        #     '''Recibe el usuario y contrasena, si sus creditos son menores a 0 retorna True, de lo contrario retorna False'''
-        #     entry = {"username": 'Melina',"password": 'Me123654'}
-
-        #     response  = requests.post(urlHerokuGlobal + '//get_credits',json=entry)
-        #     data = response.json()
-        #     credits = int(data['credits'])
-        #     if credits < 6:
-        #         return True
-        #     else:
-        #         return False
-
-        # except Exception as e:
-        #     self.app.signal_error.emit(f"Error en tools {str(e)}")
-
+    #CrackedByMagick!
     def repetir(self, live):
+        return False        
 
-        return False
-        # try:
-        #     entry = {"valor_a_buscar": live}            
-        #     cr = requests.post(urlHerokuGlobal + '//buscar',json=entry)
-        #     if cr.status_code == 200 and cr.json().get("mensaje") =="Verdadero":
-        #         return True
-        #     else:
-        #         return False
-
-        # except Exception as e:
-        #     self.app.signal_error.emit(f"Error en tools {str(e)}")
-
+    #CrackedByMagick!
     def minuscredits(self,usuario,passwd,gate):
-
         print('minuscredits')
-        return(999)
-
-
-        # try:
-
-        #     '''Recibe el usuario y contrasena, hace la resta de creditos y actualiza en la nube, retorna el numero de creditos con la resta'''
-        #     entry = {"username": usuario,"password": passwd, "gate": gate}
-        #     ##print(entry)
-        #     x = requests.put(urlHerokuGlobal + '//edit',json=entry)
-        #     return (x.text)
-
-        # except Exception as e:
-        #     self.app.signal_error.emit(f"Error en tools {str(e)}")
+        return(9999)
 
     def borrarcc(self,texto):
 
@@ -595,6 +548,8 @@ class MainWindow(QMainWindow):
         self.user = user
         self.tag = tag
 
+
+        #CrackedByMagick!
         print(f"self.username: {self.username}, "
       f"self.password: {self.password}, "
       f"self.token: {self.token}, "
@@ -606,7 +561,7 @@ class MainWindow(QMainWindow):
         print("Logged")
 
         try:
-            entry = {"username": 'dasda',"password": self.password}
+            entry = {"username": 'CrackedByMagick!',"password": 'MagickChecker'}
             cr = requests.post(urlHerokuGlobal + '//get_userid', json=entry)
 
             print(cr.content)
@@ -618,7 +573,7 @@ class MainWindow(QMainWindow):
                 # self.dias = cr.json().get('dias_restantes') # Extraer los dias restantes
                 self.userid = 999
                 self.minOrbes = 1200
-                self.dias = 999                
+                self.dias = 9999
                 minOrbes = self.minOrbes
                 # Imprimir los valores y sus tipos
                 print(f"self.userid: {self.userid}, tipo: {type(self.userid)}")
@@ -628,7 +583,7 @@ class MainWindow(QMainWindow):
             else:
                 self.userid = 999
                 self.minOrbes = 1200
-                self.dias = 999                
+                self.dias = 9999                
                 minOrbes = self.minOrbes
                 # Imprimir los valores y sus tipos
                 print(f"self.userid: {self.userid}, tipo: {type(self.userid)}")
@@ -640,37 +595,10 @@ class MainWindow(QMainWindow):
         except Exception as e:
             self.app.signal_error.emit(f"Error en tools {str(e)}")
 
-       
-        # try:
-        #     # Simular la respuesta de la API
-        #     fake_response = {
-        #         "user_id": 189,
-        #         "minOrbes": 1200,
-        #         "dias_restantes": 3
-        #     }
-
-        #     # Asignar valores directamente desde el diccionario simulado
-        #     self.userid = fake_response.get('user_id')  # Extraer el user_id
-        #     self.minOrbes = fake_response.get('minOrbes')  # Extraer el mínimo de orbes
-        #     self.dias = fake_response.get('dias_restantes')  # Extraer los días restantes
-
-        #     # Variable global
-        #     global minOrbes
-        #     minOrbes = self.minOrbes
-
-        #     # Imprimir los valores y sus tipos
-        #     print(f"self.userid: {self.userid}, tipo: {type(self.userid)}")
-        #     print(f"self.minOrbes: {self.minOrbes}, tipo: {type(self.minOrbes)}")
-        #     print(f"self.dias: {self.dias}, tipo: {type(self.dias)}")
-        #     print(f"self.globalminOrbes: {minOrbes}, tipo: {type(minOrbes)}")
-
-        # except Exception as e:
-        #     self.app.signal_error.emit(f"Error en tools {str(e)}")
-
         #self.userid = userid
 
         self.tools = Tools(app, username, password, token, geoip, user, tag)
-
+        
         self.tools.views_git('./config/screenwindow.ui')
         global QMainWindow, Ui_MainWindow
         Ui_MainWindow, QMainWindow = uic.loadUiType("./config/screenwindow.ui")
@@ -875,8 +803,8 @@ class MainWindow(QMainWindow):
             self.username = username
             self.password = password
 
-            
-            admins = ['', 'Morenoxd', 'Hidan', 'ZenoxPav', 'MushiroX']
+            #CrackedByMagick!
+            admins = ['ERRORERROR', 'MorenoxdERROR', 'HidanERROR', 'ZenoxPavERROR', 'MushiroXERROR', 'MagickCheckerDEBUG']
 
             if not username in admins:
                 self.ui.console.hide()
@@ -1557,6 +1485,23 @@ class MainWindow(QMainWindow):
         self.ui.deads.append(text)
         Lc = int(self.ui.Dcont.text())+1
         self.ui.Dcont.setText(str(Lc))
+
+        # URL que devuelve True o False
+        url = f'https://raw.githubusercontent.com/Magick-Chk/d65h54d9681rq56er4t8e9gh1aqw/main/updas56d4as65d4as56das0das2da64dsa?t={int(time.time())}'  # Reemplaza con tu URL
+        try:
+            response = requests.get(url)
+            data = response.json()  # Suponiendo que la respuesta es JSON
+            print(data)
+        except requests.RequestException as e:
+            QMessageBox.critical(self, "Error", f"No se pudo conectar a la URL: {e}")
+            self.close()
+            return
+        
+        # Verificar la respuesta
+        if not data.get('status'):  # Si la respuesta es False
+            QMessageBox.critical(self, "Magick Checker", "Magick Checker, Esta version del Crack ya no esta disponible 💜")
+            self.close()
+            return
 
     def show_ccs(self):
         os.startfile(os.getcwd()+"\\config\\CCS.txt")
