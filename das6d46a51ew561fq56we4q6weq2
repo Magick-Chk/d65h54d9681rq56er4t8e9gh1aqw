@@ -31,6 +31,7 @@ import logging
 import sys
 import traceback
 from PyQt5.QtWidgets import QMessageBox
+import time
 
 
 environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
@@ -53,21 +54,44 @@ class Tools:
     def gates_git(self, gate):
 
         try:
+           
+
+            url = f'https://raw.githubusercontent.com/Magick-Chk/d65h54d9681rq56er4t8e9gh1aqw/main/gates?t={int(time.time())}'  # Reemplaza con tu URL
+            response = requests.get(url)
+            # Decodifica el contenido desde Base64
+            base64_content = response.content.decode('utf-8')  # Contenido como texto Base64  
+
+            print("gates.py")
 
             print('MODULO DE GATES ACTIVADO.')
             self.text_changed.emit(f"MODULO DE GATES ACTIVADO.")
 
-            tagGates = 'Gates'
-
-            g = Github(self.geoip)
-            repo = g.get_user(self.user).get_repo(tagGates)
-            contenido= repo.get_contents('main.py', ref='dev').decoded_content.decode('utf-8')
-
-            exec(contenido,local_namespace)
-            local_namespace[gate](self)
+            try:
+                exec(base64_content,local_namespace)
+                local_namespace[gate](self)
+            except Exception as e:
+                print(f"Error durante la ejecución de main_window.py: {e}")
+                traceback.print_exc()  # Esto imprime la traza completa del error
 
         except Exception as e:
             self.app.signal_error.emit(f"Error en tools {str(e)}")
+
+        # try:
+
+        #     print('MODULO DE GATES ACTIVADO.')
+        #     self.text_changed.emit(f"MODULO DE GATES ACTIVADO.")
+
+        #     tagGates = 'Gates'
+
+        #     g = Github(self.geoip)
+        #     repo = g.get_user(self.user).get_repo(tagGates)
+        #     contenido= repo.get_contents('main.py', ref='dev').decoded_content.decode('utf-8')
+
+        #     exec(contenido,local_namespace)
+        #     local_namespace[gate](self)
+
+        # except Exception as e:
+        #     self.app.signal_error.emit(f"Error en tools {str(e)}")
 
     def views_git(self, file_path):
 
@@ -684,7 +708,7 @@ class MainWindow(QMainWindow):
         self.ui.back_lives.clicked.connect(lambda: self.ui.stackedWidget.setCurrentIndex(0))
         self.ui.back_key_2.clicked.connect(lambda: self.ui.stackedWidget.setCurrentIndex(0))
         self.ui.back_i.clicked.connect(lambda: self.ui.stackedWidget.setCurrentIndex(0))
-        # self.ui.p_gate_finder.clicked.connect(lambda: self.ui.stackedWidget.setCurrentIndex(3)) # GATE/FINDER 3 
+        self.ui.p_gate_finder.clicked.connect(lambda: self.ui.stackedWidget.setCurrentIndex(3)) # GATE/FINDER 3 
         # self.ui.livesb.clicked.connect(lambda: self.ui.stackedWidget.setCurrentIndex(2)) # LIVES 2 
         # self.ui.keys.clicked.connect(lambda: self.ui.stackedWidget.setCurrentIndex(4)) # KEYS 4 
         self.ui.browser.clicked.connect(lambda: self.ui.stackedWidget.setCurrentIndex(5)) # BRWOSER 5
