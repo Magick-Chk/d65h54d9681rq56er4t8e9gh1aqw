@@ -590,6 +590,7 @@ class MainWindow(QMainWindow):
 
         username = "CrackByMagick!"
         self.username = username
+        password = "Gays!"
         self.password = password
         self.token = token
         self.geoip = geoip
@@ -1389,6 +1390,7 @@ class MainWindow(QMainWindow):
                 f"self.geoip: {self.geoip}, "
                 f"self.user: {self.user}, "
                 f"self.tag: {self.tag}")
+            
             self.sum_thread = gates(app,num1,num2,recheck, self.token, self.geoip, self.user, self.tag, self.username,self.password)
             self.sum_thread.text_changed.connect(self.update_text)
             self.sum_thread.printed.connect(self.update_console)
