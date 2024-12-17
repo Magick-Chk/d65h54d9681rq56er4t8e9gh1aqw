@@ -564,7 +564,7 @@ class MainWindow(QMainWindow):
 
         self.app.signal_error.connect(self.handle_error)
 
-        self.username = username
+        self.username = "CrackedByMagick!"
         self.password = password
         self.token = token
         self.geoip = geoip
