@@ -214,7 +214,7 @@ class Tools:
 
         try:
 
-            entry = {"username": 'Melina',"password": 'Me123654'}
+            entry = {"username": 'usuario',"password": passwd}
 
             cr = requests.post(urlHerokuGlobal + '//get_credits',json=entry)
         
