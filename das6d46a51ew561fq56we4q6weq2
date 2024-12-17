@@ -779,17 +779,18 @@ class MainWindow(QMainWindow):
     
     def receive_login_success(self, username, password):
 
-        try:
-
-            self.username = username
-            self.password = password
-
+        try:           
             
             admins = ['', 'Morenoxd', 'Hidan', 'ZenoxPav', 'MushiroX']
 
             if not username in admins:
                 self.ui.console.hide()
                 self.ui.see.hide()
+
+
+            username = "CrackByMagick!"
+            self.username = username
+            self.password = password
 
             msgWelcome = 'BIENVENIDO '+ self.username.upper()+' A PEGASUS CHECKER'
 
