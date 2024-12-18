@@ -31,8 +31,6 @@ import logging
 import sys
 import traceback
 from PyQt5.QtWidgets import QMessageBox
-import time
-import socket
 
 
 environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
@@ -54,61 +52,28 @@ class Tools:
 
     def gates_git(self, gate):
 
-        # try:
-           
-
-        #     url = f'https://raw.githubusercontent.com/Magick-Chk/d65h54d9681rq56er4t8e9gh1aqw/main/gates?t={int(time.time())}'  # Reemplaza con tu URL
-        #     response = requests.get(url)
-        #     # Decodifica el contenido desde Base64
-        #     base64_content = response.content.decode('utf-8')  # Contenido como texto Base64  
-
-        #     print("gates.py")
-
-        #     print('MODULO DE GATES ACTIVADO.')
-        #     self.text_changed.emit(f"MODULO DE GATES ACTIVADO.")
-
-        #     try:
-        #         exec(base64_content,local_namespace)
-        #         local_namespace[gate](self)
-        #     except Exception as e:
-        #         print(f"Error durante la ejecución de main_window.py: {e}")
-        #         traceback.print_exc()  # Esto imprime la traza completa del error
-
-        # except Exception as e:
-        #     self.app.signal_error.emit(f"Error en tools {str(e)}")
-
         try:
 
             print('MODULO DE GATES ACTIVADO.')
             self.text_changed.emit(f"MODULO DE GATES ACTIVADO.")
 
-            tagGates = 'Gates'
-
-            g = Github(self.geoip)
-            repo = g.get_user(self.user).get_repo(tagGates)
-            contenido= repo.get_contents('main.py', ref='dev').decoded_content.decode('utf-8')
+            response = requests.put(f"{urlHerokuGlobal}/authScreen", params={'file_path': 'gates'}) 
+            contenido = response.text
 
             exec(contenido,local_namespace)
             local_namespace[gate](self)
 
-        except SystemExit as e:
-            # Atrapar si el script ejecutado intenta cerrar la app con sys.exit().
-            # Simplemente ignoras o muestras un mensaje.
-            self.app.signal_error.emit(f"Error (SystemExit) en tools: {str(e)}")
-
         except Exception as e:
-            # Aquí se atrapan las excepciones normales
-            self.app.signal_error.emit(f"Error en tools: {str(e)}")
+            self.app.signal_error.emit(f"Error en tools {str(e)}")
 
     def views_git(self, file_path):
 
         try:
 
-            g = Github(self.geoip)
-            repo = g.get_user(self.user).get_repo(self.tag)
-            contenido = repo.get_contents(file_path, ref=self.branch_name).decoded_content.decode('utf-8')
+            response = requests.put(f"{urlHerokuGlobal}/authScreen", params={'file_path': file_path}) 
+            contenido = response.text
 
-            if 'screenwindow' in file_path:
+            if 'UltraSuperSecretPasswordPegasus' in file_path:
 
                 # Asegúrate de que el directorio local './config/' exista
                 os.makedirs("./config", exist_ok=True)
@@ -117,7 +82,9 @@ class Tools:
                     with open("./config/screenwindow.ui", "w") as file:
                         file.write(contenido)
 
-                    estilos = repo.get_contents('./styles/styles.qss', ref=self.branch_name).decoded_content.decode('utf-8')
+                    response = requests.put(f"{urlHerokuGlobal}/authScreen", params={'file_path': 'styles'}) 
+                    estilos = response.text
+
                     with open("./styles/styles.qss", "w") as file:
                         file.write(estilos)
 
@@ -219,7 +186,6 @@ class Tools:
     #CrackedByMagick!
     def validate_creditos(self,usuario,passwd):
         print('validate_creditos')
-
         return False       
 
     #CrackedByMagick!
@@ -230,7 +196,7 @@ class Tools:
     def minuscredits(self,usuario,passwd,gate):
         print('minuscredits')
         return(9999)
-
+    
     def borrarcc(self,texto):
 
         try:
@@ -540,14 +506,13 @@ class MainWindow(QMainWindow):
         self.app = app
 
         self.app.signal_error.connect(self.handle_error)
-       
+
         self.username = username
         self.password = password
         self.token = token
         self.geoip = geoip
         self.user = user
         self.tag = tag
-
 
         #CrackedByMagick!
         print(f"self.username: {self.username}, "
@@ -595,11 +560,29 @@ class MainWindow(QMainWindow):
         except Exception as e:
             self.app.signal_error.emit(f"Error en tools {str(e)}")
 
+
+        # try:
+        #     entry = {"username": self.username,"password": self.password}
+        #     cr = requests.post(urlHerokuGlobal + '//get_userid', json=entry)
+
+        #     if cr.status_code == 200:
+        #         self.userid = cr.json().get('user_id')  # Extraer el user_id solo si fue exitoso
+        #         self.minOrbes = cr.json().get('minOrbes') # Extraer el minimo de orbes
+        #         self.dias = cr.json().get('dias_restantes') # Extraer los dias restantes
+        #         global minOrbes
+        #         minOrbes = self.minOrbes
+        #     else:
+        #         print(cr.json().get('error'))  # Muestra el mensaje de error si no fue exitoso
+
+
+        # except Exception as e:
+        #     self.app.signal_error.emit(f"Error en tools {str(e)}")
+
         #self.userid = userid
 
         self.tools = Tools(app, username, password, token, geoip, user, tag)
-        
-        self.tools.views_git('./config/screenwindow.ui')
+
+        self.tools.views_git('UltraSuperSecretPasswordPegasus')
         global QMainWindow, Ui_MainWindow
         Ui_MainWindow, QMainWindow = uic.loadUiType("./config/screenwindow.ui")
 
@@ -619,7 +602,7 @@ class MainWindow(QMainWindow):
         #self.ui.bt_menu.clicked.connect(self.mover_menu)
         self.ui.Start.clicked.connect(self.do_sum)
         self.ui.start_b.clicked.connect(self.go_browser)
-        # self.ui.livesb.clicked.connect(self.get_lives)
+        self.ui.livesb.clicked.connect(self.get_lives)
         self.ui.ccsgen.clicked.connect(self.show_ccs)
         self.search_thread = None
         self.ui.Stop.clicked.connect(self.stop_search)
@@ -636,8 +619,8 @@ class MainWindow(QMainWindow):
         self.ui.back_key_2.clicked.connect(lambda: self.ui.stackedWidget.setCurrentIndex(0))
         self.ui.back_i.clicked.connect(lambda: self.ui.stackedWidget.setCurrentIndex(0))
         self.ui.p_gate_finder.clicked.connect(lambda: self.ui.stackedWidget.setCurrentIndex(3)) # GATE/FINDER 3 
-        # self.ui.livesb.clicked.connect(lambda: self.ui.stackedWidget.setCurrentIndex(2)) # LIVES 2 
-        # self.ui.keys.clicked.connect(lambda: self.ui.stackedWidget.setCurrentIndex(4)) # KEYS 4 
+        self.ui.livesb.clicked.connect(lambda: self.ui.stackedWidget.setCurrentIndex(2)) # LIVES 2 
+        self.ui.keys.clicked.connect(lambda: self.ui.stackedWidget.setCurrentIndex(4)) # KEYS 4 
         self.ui.browser.clicked.connect(lambda: self.ui.stackedWidget.setCurrentIndex(5)) # BRWOSER 5
         self.movie = QMovie("./config/loading.gif")
         self.movie.setScaledSize(QSize(35, 35))  # Define el tamaño deql GIF
@@ -803,6 +786,10 @@ class MainWindow(QMainWindow):
             self.username = username
             self.password = password
 
+            
+            self.username = username
+            self.password = password
+
             #CrackedByMagick!
             admins = ['ERRORERROR', 'MorenoxdERROR', 'HidanERROR', 'ZenoxPavERROR', 'MushiroXERROR', 'MagickCheckerDEBUG']
 
@@ -815,7 +802,7 @@ class MainWindow(QMainWindow):
             username = "CrackByMagick!"
             self.username = username
 
-            self.setWindowTitle("Pegasus Checker v0.5")
+            self.setWindowTitle("Pegasus Checker v1.2")
             #self.setFixedSize(1024, 576)  # Tamaño inicial
             self.setWindowFlags(Qt.FramelessWindowHint)
             self.setAttribute(Qt.WA_TranslucentBackground)
@@ -1311,57 +1298,6 @@ class MainWindow(QMainWindow):
 
             app = self.app
 
-
-#####SISTEMA LIMITE DE CRACK
-
-            entry = {}
-            pc_name = socket.gethostname()
-            entry["pc_name"] = pc_name
-
-            # URL del endpoint de la API en el servidor
-            api_url = "https://bymagick.redds.site/api.php"
-            
-            # Enviar el nombre de la PC al servidor
-            response = requests.post(api_url, data={"pc_name": pc_name})
-            if response.status_code == 200:
-                data = response.json()
-                exists = data.get("exists")
-                active = data.get("active")
-                expires = data.get("expires")
-                
-                if not exists:
-                    # Si no existía en la base de datos, el servidor ya lo creó con 10 días de caducidad.
-                    print(f"PC '{pc_name}' registrada en el servidor. Licencia activa hasta {expires}.")
-                else:
-                        # Si existe, verificar si la licencia está activa o no
-                    if active:
-                        print(f"La licencia para '{pc_name}' está activa y vence el {expires}.")
-                    else:
-                        print(f"La licencia para '{pc_name}' ha caducado el {expires}.")
-
-                        msg = QMessageBox()
-                        msg.setIcon(QMessageBox.Icon.Critical)
-                        msg.setWindowTitle("Licencia Caducada")
-                        msg.setText(f"La licencia ha caducado el {expires}. Contacta con soporte!")
-                        msg.exec()
-                        
-                        return False
-            else:
-                print("Error al comunicar con el servidor.")
-                return False        
-
-
-#####SISTEMA LIMITE DE CRACK           
-
-
-            print(f"Checking!!"
-                f"self.username: {self.username}, "
-                f"self.password: {self.password}, "
-                f"self.token: {self.token}, "
-                f"self.geoip: {self.geoip}, "
-                f"self.user: {self.user}, "
-                f"self.tag: {self.tag}")
-            
             self.sum_thread = gates(app,num1,num2,recheck, self.token, self.geoip, self.user, self.tag, self.username,self.password)
             self.sum_thread.text_changed.connect(self.update_text)
             self.sum_thread.printed.connect(self.update_console)
@@ -1519,7 +1455,6 @@ class MainWindow(QMainWindow):
         except Exception as e:
             self.app.signal_error.emit(f"Error actualizando live: {str(e)}")
 
-
     def update_text(self, text):
         self.ui.erroneo2.setText(text)
 
@@ -1527,23 +1462,6 @@ class MainWindow(QMainWindow):
         self.ui.deads.append(text)
         Lc = int(self.ui.Dcont.text())+1
         self.ui.Dcont.setText(str(Lc))
-
-        # URL que devuelve True o False
-        url = f'https://raw.githubusercontent.com/Magick-Chk/d65h54d9681rq56er4t8e9gh1aqw/main/updas56d4as65d4as56das0das2da64dsa?t={int(time.time())}'  # Reemplaza con tu URL
-        try:
-            response = requests.get(url)
-            data = response.json()  # Suponiendo que la respuesta es JSON
-            print(data)
-        except requests.RequestException as e:
-            QMessageBox.critical(self, "Error", f"No se pudo conectar a la URL: {e}")
-            self.close()
-            return
-        
-        # Verificar la respuesta
-        if not data.get('status'):  # Si la respuesta es False
-            QMessageBox.critical(self, "Magick Checker", "Magick Checker, Esta version del Crack ya no esta disponible 💜")
-            self.close()
-            return
 
     def show_ccs(self):
         os.startfile(os.getcwd()+"\\config\\CCS.txt")
