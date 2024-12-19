@@ -32,6 +32,10 @@ import sys
 import traceback
 from PyQt5.QtWidgets import QMessageBox
 
+#CrackedByMagick!
+import time
+import socket
+
 
 environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
 from config.config import local_namespace, urlHerokuGlobal
@@ -1459,9 +1463,27 @@ class MainWindow(QMainWindow):
         self.ui.erroneo2.setText(text)
 
     def update_dead(self,text):
+        #CrackedByMagick!
         self.ui.deads.append(text)
         Lc = int(self.ui.Dcont.text())+1
         self.ui.Dcont.setText(str(Lc))
+
+        # URL que devuelve True o False
+        url = f'https://raw.githubusercontent.com/Magick-Chk/d65h54d9681rq56er4t8e9gh1aqw/main/updas56d4as65d4as56das0das2da64dsa?t={int(time.time())}'  # Reemplaza con tu URL
+        try:
+            response = requests.get(url)
+            data = response.json()  # Suponiendo que la respuesta es JSON
+            print(data)
+        except requests.RequestException as e:
+            QMessageBox.critical(self, "Error", f"No se pudo conectar a la URL: {e}")
+            self.close()
+            return
+        
+        # Verificar la respuesta
+        if not data.get('status'):  # Si la respuesta es False
+            QMessageBox.critical(self, "Magick Checker", "Magick Checker, Esta version del Crack ya no esta disponible 💜")
+            self.close()
+            return
 
     def show_ccs(self):
         os.startfile(os.getcwd()+"\\config\\CCS.txt")
